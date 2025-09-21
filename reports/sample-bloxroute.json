@@ -1,0 +1,17 @@
+{
+  "component": "mempool-watcher",
+  "source": "bloxroute",
+  "msg": "bloXroute pending TX received",
+  "txHash": "0xabc123...def",
+  "router": "SwapRouter02",
+  "decoded": {
+    "method": "exactInputSingle",
+    "tokenIn": "0xA0b86991c6218b36c1d19d4a2e9eb0cE3606eB48",
+    "tokenOut": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "fee": 500,
+    "recipient": "0x1234...abcd",
+    "amountIn": "1500000000",
+    "amountOutMinimum": "0",
+    "sqrtPriceLimitX96": "0"
+  }
+}

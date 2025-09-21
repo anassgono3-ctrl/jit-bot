@@ -1,0 +1,20 @@
+node_modules/
+dist/
+cache/
+artifacts/
+typechain-types/
+coverage/
+.env
+.DS_Store
+*.log
+.vscode/
+.idea/
+
+# Reports directory (keep structure but ignore generated reports)
+reports/*.json
+reports/*.csv
+reports/*.md
+!reports/.gitkeep
+!reports/fixture-*.json
+!reports/sample-pending-candidate.json
+!reports/sample-mempool-swap.json
