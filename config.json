@@ -1,0 +1,76 @@
+{
+  "chains": ["ethereum", "arbitrum"],
+  "targets": [
+    {
+      "pool": "WETH-USDC-0.05%",
+      "address": "0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640",
+      "token0": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "token1": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "fee": 500,
+      "tickSpacing": 10,
+      "symbol0": "WETH",
+      "symbol1": "USDC",
+      "decimals0": 18,
+      "decimals1": 6
+    },
+    {
+      "pool": "ETH-USDT-0.3%",
+      "address": "0x4e68Ccd3E89f51C3074ca5072bbAC773960dFa36",
+      "token0": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "token1": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "fee": 3000,
+      "tickSpacing": 60,
+      "symbol0": "WETH",
+      "symbol1": "USDT",
+      "decimals0": 18,
+      "decimals1": 6
+    },
+    {
+      "pool": "WBTC-ETH-0.3%",
+      "address": "0xCBCdF9626bC03E24f779434178A73a0B4bad62eD",
+      "token0": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "token1": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "fee": 3000,
+      "tickSpacing": 60,
+      "symbol0": "WBTC",
+      "symbol1": "WETH",
+      "decimals0": 8,
+      "decimals1": 18
+    }
+  ],
+  "minProfitThreshold": 0.01,
+  "maxLoanSize": 1000000,
+  "tickRangeWidth": 60,
+  "gasPriceStrategy": "aggressive",
+  "slippageTolerance": 0.005,
+  "flashLoanProviders": {
+    "balancer": {
+      "vault": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+      "enabled": true,
+      "priority": 1
+    },
+    "aave": {
+      "poolAddressProvider": "0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e",
+      "enabled": true,
+      "priority": 2
+    }
+  },
+  "contracts": {
+    "ethereum": {
+      "uniswapV3PositionManager": "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+      "uniswapV3SwapRouter": "0xE592427A0AEce92De3Edee1F18E0157C05861564"
+    },
+    "arbitrum": {
+      "uniswapV3PositionManager": "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+      "uniswapV3SwapRouter": "0xE592427A0AEce92De3Edee1F18E0157C05861564"
+    }
+  },
+  "rpc": {
+    "ethereum": "wss://eth-mainnet.ws.alchemyapi.io/v2/YOUR_KEY",
+    "arbitrum": "wss://arb-mainnet.ws.alchemyapi.io/v2/YOUR_KEY"
+  },
+  "flashbots": {
+    "relayUrl": "https://relay.flashbots.net",
+    "enabled": true
+  }
+}
