@@ -11,11 +11,13 @@ This repository includes two GitHub Actions workflows for testing and running th
 **Triggers:** Manual workflow dispatch only
 
 **Requirements:**
+
 - Repository Secrets:
   - `RPC_URL_HTTP` - Your Alchemy HTTP endpoint URL
   - `RPC_URL_WS` - Your Alchemy WebSocket endpoint URL
 
 **What it does:**
+
 - Tests HTTP and WebSocket connectivity
 - Verifies chain ID and retrieves latest block
 - Performs read-only contract calls
@@ -23,6 +25,7 @@ This repository includes two GitHub Actions workflows for testing and running th
 - Uploads test logs as artifacts
 
 **How to run:**
+
 1. Go to Actions tab in GitHub
 2. Select "Smoke Test - Alchemy Endpoints"
 3. Click "Run workflow"
@@ -37,6 +40,7 @@ This repository includes two GitHub Actions workflows for testing and running th
 **Requirements:**
 
 #### Required Secrets:
+
 - `RPC_URL_HTTP` - Ethereum mainnet RPC endpoint
 - `RPC_URL_WS` - Ethereum mainnet WebSocket endpoint (optional)
 - `PRIVATE_KEY` - Main execution wallet private key
@@ -46,10 +50,12 @@ This repository includes two GitHub Actions workflows for testing and running th
 - `BLOCKNATIVE_API_KEY` - Blocknative API key (optional)
 
 #### Required Variables (Safety Toggles):
+
 - `I_UNDERSTAND_LIVE_RISK` - Must be `"true"` to run
 - `CONFIRM_MAINNET` - Must be `"true"` to run on mainnet
 
 #### Optional Variables (Configuration):
+
 - `SIMULATION_MODE` - Set to `"false"` for live execution
 - `ENABLE_FLASHBOTS` - Enable Flashbots bundles
 - `MAX_FLASHLOAN_AMOUNT_USD` - Maximum flashloan amount
@@ -62,6 +68,7 @@ This repository includes two GitHub Actions workflows for testing and running th
 - `ONE_BUNDLE_PER_BLOCK` - One bundle per block limit
 
 **Configuration Options:**
+
 - Duration: 30-600 seconds (default: 180)
 - Execution mode: `ts-node` or `compiled`
 - Log level: `debug`, `info`, or `warn`
@@ -77,6 +84,7 @@ This repository includes two GitHub Actions workflows for testing and running th
 - Artifact compression: 0-9 level (default: 6)
 
 **Safety Features:**
+
 - Concurrency protection (only one run at a time)
 - **Memory guard protection** (monitors RSS usage and prevents OOM crashes)
 - **Enhanced timeout protection** (process-level timeouts via shell commands with reliable termination)
@@ -89,6 +97,7 @@ This repository includes two GitHub Actions workflows for testing and running th
 - Comprehensive logging and artifacts with extended retention
 
 **How to run:**
+
 1. Configure all required secrets and variables in repository settings
 2. Go to Actions tab in GitHub
 3. Select "Live Bot - Short Run Test"

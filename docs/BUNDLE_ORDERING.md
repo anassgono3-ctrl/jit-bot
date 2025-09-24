@@ -15,6 +15,7 @@ If the victim transaction doesn't execute between our mint and burn operations, 
 ## Bundle Structure
 
 ### Standard Bundle Order
+
 ```
 Transaction 0: JIT Flashloan + Mint (our transaction)
 Transaction 1: Victim Swap (captured from mempool)
@@ -22,6 +23,7 @@ Transaction 2: JIT Burn/Collect + Repay (our transaction)
 ```
 
 ### Alternative: Single Callback Bundle
+
 ```
 Transaction 0: JIT Flashloan Call (includes mint/burn in callback)
 Transaction 1: Victim Swap (executed during callback execution)
@@ -30,6 +32,7 @@ Transaction 1: Victim Swap (executed during callback execution)
 ## Victim Transaction Capture
 
 ### Raw Transaction Bytes
+
 The bot captures raw signed transaction bytes from the mempool for two reasons:
 
 1. **Deterministic Inclusion**: Raw bytes ensure the exact transaction is included in our bundle
@@ -38,6 +41,7 @@ The bot captures raw signed transaction bytes from the mempool for two reasons:
 ### Implementation
 
 #### Mempool Watcher Enhancement
+
 ```typescript
 export interface PendingSwap {
   // ... existing fields
@@ -46,6 +50,7 @@ export interface PendingSwap {
 ```
 
 #### Capturing Raw Bytes
+
 ```typescript
 private serializeTransaction(tx: ethers.providers.TransactionResponse): string | undefined {
   try {
@@ -61,7 +66,7 @@ private serializeTransaction(tx: ethers.providers.TransactionResponse): string |
       type: tx.type || 0,
       chainId: tx.chainId
     };
-    
+
     return ethers.utils.serializeTransaction(txData);
   } catch (error) {
     return undefined;
@@ -72,6 +77,7 @@ private serializeTransaction(tx: ethers.providers.TransactionResponse): string |
 ### Provider Requirements
 
 #### Production Setup
+
 For live execution, you need access to raw mempool transactions:
 
 1. **Local Node**: Run your own Ethereum node with mempool access
@@ -79,13 +85,16 @@ For live execution, you need access to raw mempool transactions:
 3. **WebSocket Mempool Stream**: Subscribe to real-time pending transaction feeds
 
 #### Fallback Strategy
+
 If raw transaction bytes are unavailable:
+
 - Candidate is rejected (safer approach)
 - Or use alternative deterministic ordering (document your approach)
 
 ## Bundle Creation Process
 
 ### Enhanced Bundle Creation
+
 ```typescript
 async createEnhancedBundle(params: EnhancedBundleParams): Promise<FlashbotsBundle> {
   // Validate victim transaction is present
@@ -110,6 +119,7 @@ async createEnhancedBundle(params: EnhancedBundleParams): Promise<FlashbotsBundl
 ```
 
 ### Bundle Validation
+
 ```typescript
 validateBundleOrdering(bundle: FlashbotsBundle): { valid: boolean; issues: string[] } {
   const issues: string[] = [];
@@ -119,7 +129,7 @@ validateBundleOrdering(bundle: FlashbotsBundle): { valid: boolean; issues: strin
     if (!bundle.victimTransaction.rawTx) {
       issues.push('Victim transaction raw bytes required');
     }
-    
+
     if (!bundle.victimTransaction.hash) {
       issues.push('Victim transaction hash required');
     }
@@ -132,6 +142,7 @@ validateBundleOrdering(bundle: FlashbotsBundle): { valid: boolean; issues: strin
 ## Test Fixtures
 
 ### Fixture Format
+
 Test fixtures include victim transaction data for E2E testing:
 
 ```json
@@ -157,12 +168,14 @@ Test fixtures include victim transaction data for E2E testing:
 ### Generating Fixtures
 
 #### Automatic Generation
+
 ```bash
 # Generate fixtures from recent mainnet blocks
 node scripts/generate-fixtures.js
 ```
 
 #### Manual Creation
+
 For testing, you can create fixtures manually:
 
 1. Find a suitable Uniswap V3 swap transaction
@@ -173,12 +186,14 @@ For testing, you can create fixtures manually:
 ### Updating Fixtures
 
 #### Regular Updates
+
 ```bash
 # Update fixtures with recent transactions (weekly)
 npm run fixtures:update
 ```
 
 #### Fixture Validation
+
 ```bash
 # Validate all fixtures are properly formatted
 npm run fixtures:validate
@@ -187,6 +202,7 @@ npm run fixtures:validate
 ## Testing Bundle Ordering
 
 ### Unit Tests
+
 ```typescript
 describe('Bundle Ordering', () => {
   it('should create bundle with correct victim transaction placement', async () => {
@@ -194,9 +210,9 @@ describe('Bundle Ordering', () => {
       jitTransactions: mockJitTxs,
       victimTransaction: {
         rawTx: '0x02f86d0182f618...',
-        hash: '0x1234567890abcdef...'
+        hash: '0x1234567890abcdef...',
       },
-      targetBlockNumber: 18500000
+      targetBlockNumber: 18500000,
     });
 
     expect(bundle.victimTransaction).to.exist;
@@ -206,14 +222,15 @@ describe('Bundle Ordering', () => {
 ```
 
 ### Integration Tests
+
 ```typescript
 describe('E2E Bundle Simulation', () => {
   it('should simulate profitable execution with victim transaction', async () => {
     const fixture = loadFixture('fixture-USDC-WETH-0.3%-18500000.json');
-    
+
     const result = await runPreflightSimulation({
       ...simulationParams,
-      victimTransaction: fixture.victimTransaction
+      victimTransaction: fixture.victimTransaction,
     });
 
     expect(result.simulationSteps.victimTxIncluded).to.be.true;
@@ -225,23 +242,25 @@ describe('E2E Bundle Simulation', () => {
 ## Monitoring and Alerts
 
 ### Key Metrics
+
 - `jit_bot_bundles_without_victim_tx_total`: Bundles created without victim transactions
 - `jit_bot_raw_tx_capture_failures_total`: Failures to capture raw transaction bytes
 - `jit_bot_bundle_ordering_violations_total`: Bundle ordering validation failures
 
 ### Alert Rules
+
 ```yaml
 - alert: VictimTransactionMissing
   expr: jit_bot_bundles_without_victim_tx_total > 0
   for: 1m
   annotations:
-    summary: "Bundles created without victim transactions"
+    summary: 'Bundles created without victim transactions'
 
 - alert: RawTransactionCaptureFailure
   expr: increase(jit_bot_raw_tx_capture_failures_total[5m]) > 3
   for: 2m
   annotations:
-    summary: "Failing to capture raw transaction bytes"
+    summary: 'Failing to capture raw transaction bytes'
 ```
 
 ## Troubleshooting
@@ -249,27 +268,34 @@ describe('E2E Bundle Simulation', () => {
 ### Common Issues
 
 #### Missing Raw Transaction Bytes
+
 **Symptom**: Bundles fail validation with "raw bytes required"
-**Solution**: 
+**Solution**:
+
 1. Check your RPC provider supports raw transaction access
 2. Verify mempool watcher is capturing transactions correctly
 3. Consider using static fixtures for testing
 
 #### Bundle Ordering Violations
+
 **Symptom**: Bundle validation fails with ordering issues
 **Solution**:
+
 1. Ensure victim transaction insert index is valid
 2. Check JIT transaction count (should be exactly 2)
 3. Validate bundle structure before submission
 
 #### Simulation vs. Live Profit Deviation
+
 **Symptom**: Actual profits differ significantly from simulation
 **Solution**:
+
 1. Check if victim transaction executed as expected
 2. Verify gas price modeling accuracy
 3. Review Uniswap V3 fee calculations
 
 ### Debug Commands
+
 ```bash
 # Test bundle creation with specific fixture
 node scripts/test-bundle-creation.js --fixture reports/fixture-USDC-WETH-0.3%-18500000.json
@@ -284,13 +310,16 @@ npm run bundle:simulate -- --pool USDC-WETH --amount 10
 ## Security Considerations
 
 ### Raw Transaction Validation
+
 Always validate victim transactions before inclusion:
+
 - Verify transaction hash matches expected format
 - Check transaction is actually a Uniswap V3 swap
 - Ensure swap targets our monitored pools
 - Validate swap amount meets minimum thresholds
 
 ### Bundle Submission Security
+
 - Never submit bundles without proper validation
 - Always simulate bundles before live submission
 - Monitor for MEV sandwich attacks on our positions

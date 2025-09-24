@@ -7,7 +7,7 @@ This runbook provides step-by-step procedures for managing the JIT Bot in produc
 Before flipping `SIMULATION_MODE=false`, ensure all acceptance criteria are met:
 
 - [ ] All contract tests pass (profit guard, callbacks)
-- [ ] Three reports/report-*.json files generated and validated
+- [ ] Three reports/report-\*.json files generated and validated
 - [ ] Slither shows no High severity findings
 - [ ] eth_callBundle simulation success confirmed
 - [ ] deploy-safe.ts exists and tested on testnet
@@ -33,6 +33,7 @@ npx hardhat verify --network sepolia <CONTRACT_ADDRESS> \
 ```
 
 **Expected Output:**
+
 - Contract address returned
 - Etherscan verification successful
 - Gas usage < 2M gas
@@ -51,11 +52,12 @@ npm run test:unit -- --grep "flashloan orchestrator"
 # Test mempool capture
 npm run test:unit -- --grep "mempool raw tx"
 
-# Test bundle construction  
+# Test bundle construction
 npm run test:unit -- --grep "bundle inclusion"
 ```
 
 **Success Criteria:**
+
 - All tests pass with actual contract
 - Raw transaction capture > 90% success rate
 - Bundle validation passes
@@ -100,6 +102,7 @@ tail -f logs/jit-bot.log | grep -E "(PendingSwapDetected|BundleCreated|Simulatio
 ```
 
 **Required Metrics (48h avg):**
+
 - Raw TX capture rate > 90%
 - Bundle simulation success > 95%
 - Opportunities detected > 10/hour
@@ -121,6 +124,7 @@ node scripts/validate-profit-estimates.js --days 2
 ```
 
 **Daily Checklist:**
+
 - [ ] No errors in application logs
 - [ ] Mempool connection stable
 - [ ] Bundle simulations passing
@@ -174,6 +178,7 @@ curl http://localhost:3001/metrics | grep -E "(errors_total|failed_bundles|rejec
 ```
 
 **Immediate Stop Conditions:**
+
 - Any unexpected reverts
 - Gas costs > expected profits
 - Flashloan failures
@@ -205,32 +210,35 @@ npx hardhat run scripts/emergency-withdraw.js --network mainnet
 
 # Script should withdraw:
 # - All ERC20 token balances
-# - All ETH balance  
+# - All ETH balance
 # - Transfer to owner address
 ```
 
 ### 4.3 Incident Response
 
 **Level 1 - Minor Issues:**
+
 - Profit below expectations
 - Single bundle failures
 - Minor gas price spikes
 
-*Action:* Monitor closely, adjust parameters if needed
+_Action:_ Monitor closely, adjust parameters if needed
 
 **Level 2 - Moderate Issues:**
+
 - Multiple bundle failures
 - Mempool connection issues
 - Flashloan provider failures
 
-*Action:* Pause bot, investigate, fix issue, resume
+_Action:_ Pause bot, investigate, fix issue, resume
 
 **Level 3 - Critical Issues:**
+
 - Contract interactions failing
 - Unexpected fund losses
 - Security incident detected
 
-*Action:* Emergency pause, emergency withdraw, full investigation
+_Action:_ Emergency pause, emergency withdraw, full investigation
 
 ### 4.4 Emergency Contacts
 
@@ -472,6 +480,7 @@ node scripts/disable-pool.js --pool=<POOL_ADDRESS> --reason="Low profitability"
 ## Quick Reference
 
 ### Emergency Commands
+
 ```bash
 # Immediate stop
 pkill -f "jit-bot" && npx hardhat run scripts/emergency-pause.js
@@ -484,11 +493,13 @@ curl http://localhost:3001/metrics | grep -E "(status|uptime|profit)"
 ```
 
 ### Log Locations
+
 - Application logs: `/var/log/jit-bot/app.log`
 - Error logs: `/var/log/jit-bot/error.log`
 - Audit logs: `/var/log/jit-bot/audit.log`
 
 ### Configuration Files
+
 - Production config: `config/production.json`
 - Environment vars: `/etc/environment`
 - Service config: `/etc/systemd/system/jit-bot.service`

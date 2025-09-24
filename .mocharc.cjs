@@ -8,10 +8,11 @@ module.exports = {
     NODE_ENV: 'test',
     RPC_URL_HTTP: 'https://rpc.ankr.com/eth',
     RPC_URL_WS: 'wss://rpc.ankr.com/eth/ws',
-    PRIVATE_KEY: '0x1111111111111111111111111111111111111111111111111111111111111111',
+    PRIVATE_KEY:
+      '0x1111111111111111111111111111111111111111111111111111111111111111',
     CHAIN: 'ethereum',
     DRY_RUN: 'true',
     MAX_GAS_GWEI: '100',
-    PROMETHEUS_PORT: '3001'
-  }
+    PROMETHEUS_PORT: '3001',
+  },
 };

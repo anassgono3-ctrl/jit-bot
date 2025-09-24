@@ -21,7 +21,7 @@
   },
   "expectedResults": {
     "profitable": true,
-    "estimatedNetProfitUSD": 75.50
+    "estimatedNetProfitUSD": 75.5
   },
   "metadata": {
     "generatedAt": "2024-09-14T00:00:00.000Z",

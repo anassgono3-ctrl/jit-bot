@@ -44,9 +44,7 @@
           "orientation": "horizontal",
           "reduceOptions": {
             "values": false,
-            "calcs": [
-              "lastNotNull"
-            ],
+            "calcs": ["lastNotNull"],
             "fields": ""
           },
           "textMode": "auto"
@@ -167,9 +165,7 @@
         "options": {
           "reduceOptions": {
             "values": false,
-            "calcs": [
-              "lastNotNull"
-            ],
+            "calcs": ["lastNotNull"],
             "fields": ""
           },
           "pieType": "pie",
@@ -180,9 +176,7 @@
             "displayMode": "visible",
             "placement": "bottom"
           },
-          "displayLabels": [
-            "name"
-          ]
+          "displayLabels": ["name"]
         },
         "gridPos": {
           "h": 9,

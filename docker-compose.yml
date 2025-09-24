@@ -7,60 +7,59 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=production
-      - ETHEREUM_RPC_URL=${ETHEREUM_RPC_URL}
-      - ARBITRUM_RPC_URL=${ARBITRUM_RPC_URL}
-      - PRIVATE_KEY=${PRIVATE_KEY}
-      - FLASHBOTS_PRIVATE_KEY=${FLASHBOTS_PRIVATE_KEY}
-      - JIT_CONTRACT_ADDRESS=${JIT_CONTRACT_ADDRESS}
-      - MIN_PROFIT_THRESHOLD=${MIN_PROFIT_THRESHOLD:-0.01}
-      - MAX_LOAN_SIZE=${MAX_LOAN_SIZE:-1000000}
-      - METRICS_PORT=3001
-    ports:
-      - "3001:3001"
+    env_file:
+      - .env
     volumes:
-      - ./config.json:/app/config.json:ro
-      - ./logs:/app/logs
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-        max-file: "10"
+      - ./data:/app/data
+    ports:
+      - '3000:3000'
+    depends_on:
+      - redis
+    networks:
+      - jit-network
 
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: jit-bot-prometheus
+  redis:
+    image: redis:7-alpine
+    container_name: jit-redis
     restart: unless-stopped
-    ports:
-      - "9090:9090"
     volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=200h'
-      - '--web.enable-lifecycle'
+      - redis_data:/data
+    networks:
+      - jit-network
 
-  grafana:
-    image: grafana/grafana:latest
-    container_name: jit-bot-grafana
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./monitoring/grafana-dashboard.json:/etc/grafana/provisioning/dashboards/jit-bot.json:ro
-      - ./monitoring/grafana-datasource.yml:/etc/grafana/provisioning/datasources/prometheus.yml:ro
+  # Optional: Erigon node (commented out by default)
+  # erigon:
+  #   image: thorax/erigon:latest
+  #   container_name: jit-erigon
+  #   restart: unless-stopped
+  #   command: erigon --chain=mainnet --datadir=/data --http --http.api=eth,debug,net,trace,web3 --http.addr=0.0.0.0 --http.port=8545 --ws --ws.addr=0.0.0.0 --ws.port=8546
+  #   ports:
+  #     - "8545:8545"
+  #     - "8546:8546"
+  #   volumes:
+  #     - erigon_data:/data
+  #   networks:
+  #     - jit-network
+
+  # Optional: Geth node (commented out by default)
+  # geth:
+  #   image: ethereum/client-go:latest
+  #   container_name: jit-geth
+  #   restart: unless-stopped
+  #   command: --http --http.api=eth,net,web3 --http.addr=0.0.0.0 --http.port=8545 --ws --ws.api=eth,net,web3 --ws.addr=0.0.0.0 --ws.port=8546
+  #   ports:
+  #     - "8545:8545"
+  #     - "8546:8546"
+  #   volumes:
+  #     - geth_data:/root/.ethereum
+  #   networks:
+  #     - jit-network
 
 volumes:
-  prometheus_data:
-  grafana_data:
+  redis_data:
+  # erigon_data:
+  # geth_data:
+
+networks:
+  jit-network:
+    driver: bridge

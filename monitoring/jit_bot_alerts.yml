@@ -9,8 +9,8 @@ groups:
           severity: warning
           component: jit-bot
         annotations:
-          summary: "JIT Bot has high error rate"
-          description: "JIT Bot error rate is {{ $value | humanizePercentage }} over the last 5 minutes"
+          summary: 'JIT Bot has high error rate'
+          description: 'JIT Bot error rate is {{ $value | humanizePercentage }} over the last 5 minutes'
 
       # No Recent Activity Alert
       - alert: JitBotNoActivity
@@ -20,8 +20,8 @@ groups:
           severity: warning
           component: jit-bot
         annotations:
-          summary: "JIT Bot has no recent activity"
-          description: "No swap activity detected for more than 30 minutes"
+          summary: 'JIT Bot has no recent activity'
+          description: 'No swap activity detected for more than 30 minutes'
 
       # Low Success Rate Alert
       - alert: JitBotLowSuccessRate
@@ -31,8 +31,8 @@ groups:
           severity: critical
           component: jit-bot
         annotations:
-          summary: "JIT Bot has very low success rate"
-          description: "Bundle success rate is {{ $value | humanizePercentage }} - check MEV competition and gas prices"
+          summary: 'JIT Bot has very low success rate'
+          description: 'Bundle success rate is {{ $value | humanizePercentage }} - check MEV competition and gas prices'
 
       # Negative Profit Alert
       - alert: JitBotNegativeProfit
@@ -42,8 +42,8 @@ groups:
           severity: critical
           component: jit-bot
         annotations:
-          summary: "JIT Bot is losing money"
-          description: "Net profit is {{ $value }} ETH - immediate attention required"
+          summary: 'JIT Bot is losing money'
+          description: 'Net profit is {{ $value }} ETH - immediate attention required'
 
       # Live Mode Profit Target Alert
       - alert: JitBotLiveProfitLow
@@ -53,8 +53,8 @@ groups:
           severity: warning
           component: jit-bot
         annotations:
-          summary: "Low live profit after 1 hour"
-          description: "Live mode profit is only ${{ $value }} after 1+ hours of operation"
+          summary: 'Low live profit after 1 hour'
+          description: 'Live mode profit is only ${{ $value }} after 1+ hours of operation'
 
       # Gas Efficiency Alert
       - alert: JitBotPoorGasEfficiency
@@ -64,8 +64,8 @@ groups:
           severity: warning
           component: jit-bot
         annotations:
-          summary: "Poor gas efficiency detected"
-          description: "Gas efficiency ratio is {{ $value }} - consider adjusting strategy"
+          summary: 'Poor gas efficiency detected'
+          description: 'Gas efficiency ratio is {{ $value }} - consider adjusting strategy'
 
       # System Health Alerts
       - alert: JitBotDown
@@ -75,8 +75,8 @@ groups:
           severity: critical
           component: jit-bot
         annotations:
-          summary: "JIT Bot is down"
-          description: "JIT Bot application is not responding"
+          summary: 'JIT Bot is down'
+          description: 'JIT Bot application is not responding'
 
       # Memory/CPU Alerts (if node-exporter is available)
       - alert: HighCPUUsage
@@ -86,8 +86,8 @@ groups:
           severity: warning
           component: system
         annotations:
-          summary: "High CPU usage"
-          description: "CPU usage is {{ $value }}% on {{ $labels.instance }}"
+          summary: 'High CPU usage'
+          description: 'CPU usage is {{ $value }}% on {{ $labels.instance }}'
 
       - alert: HighMemoryUsage
         expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 90
@@ -96,8 +96,8 @@ groups:
           severity: warning
           component: system
         annotations:
-          summary: "High memory usage"
-          description: "Memory usage is {{ $value }}% on {{ $labels.instance }}"
+          summary: 'High memory usage'
+          description: 'Memory usage is {{ $value }}% on {{ $labels.instance }}'
 
       # Production Hardening Alerts
       - alert: FlashbotsHighBundleFailureRate
@@ -107,8 +107,8 @@ groups:
           severity: critical
           component: flashbots
         annotations:
-          summary: "Flashbots bundle failure rate too high"
-          description: "Bundle failure rate is {{ $value | humanizePercentage }} over the last 5 minutes (threshold: 5%)"
+          summary: 'Flashbots bundle failure rate too high'
+          description: 'Bundle failure rate is {{ $value | humanizePercentage }} over the last 5 minutes (threshold: 5%)'
 
       - alert: PoolDisabledTooLong
         expr: jit_bot_pool_disabled{pool=~".+"} == 1
@@ -117,8 +117,8 @@ groups:
           severity: warning
           component: pool-management
         annotations:
-          summary: "Pool {{ $labels.pool }} disabled for too long"
-          description: "Pool {{ $labels.pool }} has been disabled for more than 30 minutes"
+          summary: 'Pool {{ $labels.pool }} disabled for too long'
+          description: 'Pool {{ $labels.pool }} has been disabled for more than 30 minutes'
 
       - alert: FlashloanProviderFallbacks
         expr: increase(jit_bot_flashloan_fallback_total[5m]) > 5
@@ -127,8 +127,8 @@ groups:
           severity: warning
           component: flashloan
         annotations:
-          summary: "High number of flashloan provider fallbacks"
-          description: "{{ $value }} fallbacks from Balancer to Aave in the last 5 minutes (indicates Balancer liquidity issues)"
+          summary: 'High number of flashloan provider fallbacks'
+          description: '{{ $value }} fallbacks from Balancer to Aave in the last 5 minutes (indicates Balancer liquidity issues)'
 
       - alert: VictimTransactionMissing
         expr: jit_bot_bundles_without_victim_tx_total > 0
@@ -137,8 +137,8 @@ groups:
           severity: warning
           component: bundle-ordering
         annotations:
-          summary: "Bundles created without victim transactions"
-          description: "{{ $value }} bundles were created without victim transactions (may affect execution ordering)"
+          summary: 'Bundles created without victim transactions'
+          description: '{{ $value }} bundles were created without victim transactions (may affect execution ordering)'
 
       - alert: OnChainProfitGuardTriggered
         expr: increase(jit_bot_profit_guard_reverts_total[1m]) > 0
@@ -147,8 +147,8 @@ groups:
           severity: critical
           component: profit-guard
         annotations:
-          summary: "On-chain profit guard triggered"
-          description: "{{ $value }} transactions reverted due to insufficient profit - check strategy profitability"
+          summary: 'On-chain profit guard triggered'
+          description: '{{ $value }} transactions reverted due to insufficient profit - check strategy profitability'
 
       - alert: BalancerLiquidityLow
         expr: jit_bot_balancer_vault_balance_eth < 1000
@@ -157,8 +157,8 @@ groups:
           severity: warning
           component: balancer
         annotations:
-          summary: "Balancer vault liquidity running low"
-          description: "Balancer vault has only {{ $value }} ETH available (threshold: 1000 ETH)"
+          summary: 'Balancer vault liquidity running low'
+          description: 'Balancer vault has only {{ $value }} ETH available (threshold: 1000 ETH)'
 
       - alert: AaveFlashloanFeesHigh
         expr: jit_bot_aave_flashloan_fee_percentage > 0.1
@@ -167,8 +167,8 @@ groups:
           severity: warning
           component: aave
         annotations:
-          summary: "Aave flashloan fees unusually high"
-          description: "Aave flashloan fees are {{ $value }}% (typical: 0.05%)"
+          summary: 'Aave flashloan fees unusually high'
+          description: 'Aave flashloan fees are {{ $value }}% (typical: 0.05%)'
 
       - alert: JitExecutorContractPaused
         expr: jit_bot_executor_paused == 1
@@ -177,8 +177,8 @@ groups:
           severity: critical
           component: contract
         annotations:
-          summary: "JIT Executor contract is paused"
-          description: "The JIT Executor contract has been paused - no executions possible"
+          summary: 'JIT Executor contract is paused'
+          description: 'The JIT Executor contract has been paused - no executions possible'
 
       - alert: SimulationVsActualProfitDeviation
         expr: abs(jit_bot_actual_profit_usd - jit_bot_simulated_profit_usd) / jit_bot_simulated_profit_usd > 0.2
@@ -187,8 +187,8 @@ groups:
           severity: warning
           component: simulation
         annotations:
-          summary: "Large deviation between simulated and actual profit"
-          description: "Actual profit deviates by {{ $value | humanizePercentage }} from simulation (may indicate inaccurate modeling)"
+          summary: 'Large deviation between simulated and actual profit'
+          description: 'Actual profit deviates by {{ $value | humanizePercentage }} from simulation (may indicate inaccurate modeling)'
 
       - alert: RawTransactionCaptureFailure
         expr: increase(jit_bot_raw_tx_capture_failures_total[5m]) > 3
@@ -197,5 +197,5 @@ groups:
           severity: warning
           component: mempool
         annotations:
-          summary: "Failing to capture raw transaction bytes"
-          description: "{{ $value }} failures to capture raw transaction bytes in last 5 minutes (may affect bundle ordering)"
+          summary: 'Failing to capture raw transaction bytes'
+          description: '{{ $value }} failures to capture raw transaction bytes in last 5 minutes (may affect bundle ordering)'
