@@ -2,7 +2,7 @@
  * Tests for provider functionality
  */
 
-import { HttpProvider, WsProvider } from '../../src/providers/index';
+import { HttpProvider, WsProvider } from '../../src/providers/index.js';
 
 describe('Provider Tests', () => {
   describe('HttpProvider', () => {
@@ -19,7 +19,9 @@ describe('Provider Tests', () => {
     it('should handle connection testing when ETH_RPC_HTTP is not set', async () => {
       if (!process.env.ETH_RPC_HTTP) {
         // Skip network-dependent test when environment variable is not set
-        console.log('Skipping HTTP provider connection test - ETH_RPC_HTTP not set');
+        console.log(
+          'Skipping HTTP provider connection test - ETH_RPC_HTTP not set'
+        );
         return;
       }
 

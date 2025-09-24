@@ -7,6 +7,7 @@ This document outlines the deployment requirements and procedures for the JIT Li
 ## System Requirements
 
 ### Minimum Requirements (Development/Testing)
+
 - **CPU**: 4 cores, 2.4GHz+
 - **RAM**: 8GB
 - **Storage**: 100GB SSD
@@ -14,6 +15,7 @@ This document outlines the deployment requirements and procedures for the JIT Li
 - **OS**: Ubuntu 20.04+, macOS 10.15+, Windows 10+
 
 ### Recommended Requirements (Production Simulation)
+
 - **CPU**: 8+ cores, 3.0GHz+
 - **RAM**: 16GB+
 - **Storage**: 500GB NVMe SSD
@@ -21,7 +23,9 @@ This document outlines the deployment requirements and procedures for the JIT Li
 - **OS**: Ubuntu 22.04 LTS
 
 ### Future Live Trading Requirements
+
 **(NOT IMPLEMENTED - For Reference Only)**
+
 - **CPU**: 16+ cores, 3.5GHz+
 - **RAM**: 32GB+
 - **Storage**: 2TB NVMe SSD (for full archive node)
@@ -32,6 +36,7 @@ This document outlines the deployment requirements and procedures for the JIT Li
 ## Software Dependencies
 
 ### Core Dependencies
+
 ```bash
 # Node.js (LTS version)
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
@@ -45,6 +50,7 @@ sudo apt-get install -y build-essential git curl
 ```
 
 ### Optional Dependencies
+
 ```bash
 # For advanced monitoring (optional)
 docker pull prom/prometheus
@@ -57,32 +63,38 @@ sudo apt-get install -y postgresql-14
 ## Installation
 
 ### 1. Clone Repository
+
 ```bash
 git clone https://github.com/your-org/jit-bot
 cd jit-bot
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 npm install
 ```
 
 ### 3. Build Framework
+
 ```bash
 npm run build
 ```
 
 ### 4. Run Tests
+
 ```bash
 npm test
 ```
 
 ### 5. Generate Fixtures
+
 ```bash
 npm run generate-fixtures
 ```
 
 ### 6. Run Example Backtest
+
 ```bash
 npm run example-backtest
 ```
@@ -90,6 +102,7 @@ npm run example-backtest
 ## Configuration
 
 ### Environment Variables
+
 ```bash
 # Framework Configuration
 export NODE_ENV=production
@@ -109,6 +122,7 @@ export MAX_POSITIONS=10
 ### Configuration Files
 
 #### `src/config/pools.json`
+
 ```json
 {
   "pools": [
@@ -123,6 +137,7 @@ export MAX_POSITIONS=10
 ```
 
 #### `src/config/strategy-config.json`
+
 ```json
 {
   "poolRules": {
@@ -151,6 +166,7 @@ curl http://localhost:3001/metrics
 ```
 
 **Features**:
+
 - Hot reloading
 - Debug logging
 - Small fixture files
@@ -172,6 +188,7 @@ curl http://localhost:3001/health
 ```
 
 **Features**:
+
 - Production-like configuration
 - Large fixture files
 - Performance monitoring
@@ -193,6 +210,7 @@ sudo -u jit-sim NODE_ENV=production npm run start
 ```
 
 **Features**:
+
 - Isolated user account
 - Production monitoring
 - Comprehensive logging
@@ -207,7 +225,7 @@ The framework exports Prometheus metrics at `/metrics`:
 ```bash
 # Key metrics
 jit_opportunities_detected_total
-jit_positions_opened_total  
+jit_positions_opened_total
 jit_positions_successful_total
 jit_positions_profitable_total
 jit_total_capital_usd
@@ -245,18 +263,22 @@ curl http://localhost:3001/metrics/json
 ## Security Considerations
 
 ### Development Environment
+
 - No private keys required
 - Local file access only
 - Network isolation recommended
 
 ### Production Simulations
+
 - Restricted user account
 - Firewall configuration
 - Log rotation and cleanup
 - Resource monitoring
 
 ### Future Live Trading
+
 **(Requirements for live implementation)**
+
 - Hardware security modules
 - Multi-signature wallets
 - Network segmentation
@@ -266,6 +288,7 @@ curl http://localhost:3001/metrics/json
 ## Performance Optimization
 
 ### Memory Management
+
 ```bash
 # Node.js memory optimization
 export NODE_OPTIONS="--max-old-space-size=8192"
@@ -275,6 +298,7 @@ export NODE_OPTIONS="--gc-interval=100"
 ```
 
 ### CPU Optimization
+
 ```bash
 # Use all available cores
 export UV_THREADPOOL_SIZE=16
@@ -284,6 +308,7 @@ taskset -c 0-7 npm run start
 ```
 
 ### Storage Optimization
+
 ```bash
 # SSD optimization
 echo noop > /sys/block/sda/queue/scheduler
@@ -295,6 +320,7 @@ find /tmp -name "jit-*" -mtime +1 -delete
 ## Backup and Recovery
 
 ### Configuration Backup
+
 ```bash
 # Backup configuration
 tar -czf config-backup-$(date +%Y%m%d).tar.gz src/config/
@@ -304,6 +330,7 @@ tar -czf fixtures-backup-$(date +%Y%m%d).tar.gz src/backtest/fixtures/
 ```
 
 ### Data Recovery
+
 ```bash
 # Restore configuration
 tar -xzf config-backup-20240115.tar.gz
@@ -317,6 +344,7 @@ npm run validate-config
 ### Common Issues
 
 #### Build Failures
+
 ```bash
 # Clear cache
 npm cache clean --force
@@ -325,6 +353,7 @@ npm install
 ```
 
 #### Memory Issues
+
 ```bash
 # Check memory usage
 free -h
@@ -335,6 +364,7 @@ export NODE_OPTIONS="--max-old-space-size=16384"
 ```
 
 #### Performance Issues
+
 ```bash
 # Profile CPU usage
 node --prof src/backtest/example_runner.js
@@ -344,6 +374,7 @@ node --inspect src/backtest/example_runner.js
 ```
 
 ### Log Analysis
+
 ```bash
 # Filter error logs
 grep '"level":"ERROR"' logs/jit-simulation.log
@@ -355,12 +386,14 @@ grep '"event":"decision"' logs/jit-simulation.log | jq '.data.decision' | sort |
 ## Maintenance
 
 ### Regular Tasks
+
 - **Daily**: Check health endpoints, review error logs
 - **Weekly**: Update dependencies, rotate logs
 - **Monthly**: Performance review, capacity planning
 - **Quarterly**: Security audit, disaster recovery testing
 
 ### Updates and Patches
+
 ```bash
 # Update dependencies
 npm audit fix
@@ -378,12 +411,14 @@ sudo systemctl restart jit-simulation
 ## Support and Documentation
 
 ### Framework Documentation
+
 - `README.md` - Quick start guide
-- `docs/RUNBOOK.md` - Operational procedures  
+- `docs/RUNBOOK.md` - Operational procedures
 - `docs/SECURITY.md` - Security guidelines
 - `src/specs/` - Live trading specifications
 
 ### Getting Help
+
 - Review logs for error details
 - Check GitHub issues for known problems
 - Consult the sealed specifications for live trading requirements

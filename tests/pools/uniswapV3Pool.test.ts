@@ -3,7 +3,7 @@
  */
 
 import { JsonRpcProvider } from 'ethers';
-import { UniswapV3Pool } from '../../src/pools/index';
+import { UniswapV3Pool } from '../../src/pools/index.js';
 
 describe('UniswapV3Pool Tests', () => {
   it('should construct pool accessor safely', () => {
@@ -14,22 +14,29 @@ describe('UniswapV3Pool Tests', () => {
     );
 
     expect(pool).toBeDefined();
-    expect(pool.getAddress()).toBe('0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640');
+    expect(pool.getAddress()).toBe(
+      '0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640'
+    );
   });
 
   it('should fetch slot0 when ETH_RPC_HTTP and UNISWAP_V3_POOL_ADDRESS are set', async () => {
     if (!process.env.ETH_RPC_HTTP || !process.env.UNISWAP_V3_POOL_ADDRESS) {
       // Skip network-dependent test when environment variables are not set
-      console.log('Skipping pool state test - ETH_RPC_HTTP or UNISWAP_V3_POOL_ADDRESS not set');
+      console.log(
+        'Skipping pool state test - ETH_RPC_HTTP or UNISWAP_V3_POOL_ADDRESS not set'
+      );
       return;
     }
 
     const provider = new JsonRpcProvider(process.env.ETH_RPC_HTTP);
-    const pool = new UniswapV3Pool(process.env.UNISWAP_V3_POOL_ADDRESS, provider);
+    const pool = new UniswapV3Pool(
+      process.env.UNISWAP_V3_POOL_ADDRESS,
+      provider
+    );
 
     // This should fetch real pool data when properly configured
     const state = await pool.getState();
-    
+
     expect(state).toBeDefined();
     expect(state.sqrtPriceX96).toBeDefined();
     expect(typeof state.tick).toBe('number');

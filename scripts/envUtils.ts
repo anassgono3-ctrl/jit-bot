@@ -1,5 +1,5 @@
-import { ethers } from "ethers";
-import * as dotenv from "dotenv";
+import { ethers } from 'ethers';
+import * as dotenv from 'dotenv';
 
 // Load dotenv if not already loaded
 if (!process.env.__JIT_ENV_LOADED) {
@@ -26,27 +26,31 @@ export function mask(value: string): string {
  */
 export function getAddressEnv(varName: string, fallback?: string): string {
   let value = process.env[varName];
-  
+
   // Trim whitespace if value exists
   if (value !== undefined) {
     value = value.trim();
   }
-  
+
   // Use fallback if value is empty or undefined
   if (!value && fallback !== undefined) {
     value = fallback;
   }
-  
+
   // If still no value, throw error
   if (!value) {
-    throw new Error(`Environment variable ${varName} is required but not set or empty`);
+    throw new Error(
+      `Environment variable ${varName} is required but not set or empty`
+    );
   }
-  
+
   // Validate address format
   if (!ethers.utils.isAddress(value)) {
-    throw new Error(`Environment variable ${varName} contains invalid address: "${value}"`);
+    throw new Error(
+      `Environment variable ${varName} contains invalid address: "${value}"`
+    );
   }
-  
+
   return value;
 }
 
@@ -59,27 +63,31 @@ export function getAddressEnv(varName: string, fallback?: string): string {
  */
 export function getNumberEnv(varName: string, fallback?: number): number {
   let value = process.env[varName];
-  
+
   // Trim whitespace if value exists
   if (value !== undefined) {
     value = value.trim();
   }
-  
+
   // Use fallback if value is empty or undefined
   if (!value && fallback !== undefined) {
     return fallback;
   }
-  
+
   // If still no value, throw error
   if (!value) {
-    throw new Error(`Environment variable ${varName} is required but not set or empty`);
+    throw new Error(
+      `Environment variable ${varName} is required but not set or empty`
+    );
   }
-  
+
   const parsed = parseFloat(value);
   if (isNaN(parsed)) {
-    throw new Error(`Environment variable ${varName} contains invalid number: "${value}"`);
+    throw new Error(
+      `Environment variable ${varName} contains invalid number: "${value}"`
+    );
   }
-  
+
   return parsed;
 }
 
@@ -90,28 +98,35 @@ export function getNumberEnv(varName: string, fallback?: number): number {
  * @returns Parsed BigNumber in wei
  * @throws Error if value is not a valid ETH amount
  */
-export function getEthAmountEnv(varName: string, fallback?: string): ethers.BigNumber {
+export function getEthAmountEnv(
+  varName: string,
+  fallback?: string
+): ethers.BigNumber {
   let value = process.env[varName];
-  
+
   // Trim whitespace if value exists
   if (value !== undefined) {
     value = value.trim();
   }
-  
+
   // Use fallback if value is empty or undefined
   if (!value && fallback !== undefined) {
     value = fallback;
   }
-  
+
   // If still no value, throw error
   if (!value) {
-    throw new Error(`Environment variable ${varName} is required but not set or empty`);
+    throw new Error(
+      `Environment variable ${varName} is required but not set or empty`
+    );
   }
-  
+
   try {
     return ethers.utils.parseEther(value);
   } catch (error) {
-    throw new Error(`Environment variable ${varName} contains invalid ETH amount: "${value}"`);
+    throw new Error(
+      `Environment variable ${varName} contains invalid ETH amount: "${value}"`
+    );
   }
 }
 
@@ -123,22 +138,24 @@ export function getEthAmountEnv(varName: string, fallback?: string): ethers.BigN
  */
 export function getStringEnv(varName: string, fallback?: string): string {
   let value = process.env[varName];
-  
+
   // Trim whitespace if value exists
   if (value !== undefined) {
     value = value.trim();
   }
-  
+
   // Use fallback if value is empty or undefined
   if (!value && fallback !== undefined) {
     return fallback;
   }
-  
+
   // If still no value, throw error
   if (!value) {
-    throw new Error(`Environment variable ${varName} is required but not set or empty`);
+    throw new Error(
+      `Environment variable ${varName} is required but not set or empty`
+    );
   }
-  
+
   return value;
 }
 
@@ -148,12 +165,12 @@ export function getStringEnv(varName: string, fallback?: string): string {
  */
 export function normalizeRpcUrl(): string {
   let rpcUrl = process.env.ETHEREUM_RPC_URL;
-  
+
   // Trim whitespace if value exists
   if (rpcUrl !== undefined) {
     rpcUrl = rpcUrl.trim();
   }
-  
+
   // Fallback to RPC_URL_HTTP if ETHEREUM_RPC_URL is empty or undefined
   if (!rpcUrl) {
     rpcUrl = process.env.RPC_URL_HTTP;
@@ -161,7 +178,7 @@ export function normalizeRpcUrl(): string {
       rpcUrl = rpcUrl.trim();
     }
   }
-  
+
   return rpcUrl || '';
 }
 
@@ -172,26 +189,32 @@ export function normalizeRpcUrl(): string {
  */
 export function validateDeploymentEnv(network: string): void {
   const errors: string[] = [];
-  
+
   // Validate private key
   try {
     const privateKey = getStringEnv('PRIVATE_KEY');
     if (!privateKey.startsWith('0x') || privateKey.length !== 66) {
-      errors.push('PRIVATE_KEY must be a valid 32-byte hex string starting with 0x');
+      errors.push(
+        'PRIVATE_KEY must be a valid 32-byte hex string starting with 0x'
+      );
     }
   } catch (error: any) {
     errors.push(error.message);
   }
-  
+
   // Validate RPC URL for non-fork networks
   if (network !== 'fork' && network !== 'hardhat') {
     const rpcUrl = normalizeRpcUrl();
     if (!rpcUrl) {
-      errors.push('ETHEREUM_RPC_URL (or RPC_URL_HTTP) is required for mainnet deployment');
+      errors.push(
+        'ETHEREUM_RPC_URL (or RPC_URL_HTTP) is required for mainnet deployment'
+      );
     }
   }
-  
+
   if (errors.length > 0) {
-    throw new Error(`Environment validation failed:\n${errors.map(e => `  - ${e}`).join('\n')}`);
+    throw new Error(
+      `Environment validation failed:\n${errors.map((e) => `  - ${e}`).join('\n')}`
+    );
   }
 }

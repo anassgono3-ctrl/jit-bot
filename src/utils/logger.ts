@@ -25,19 +25,3 @@ export function createLogger(level: string = 'info'): pino.Logger {
  * Default logger instance
  */
 export const logger = createLogger();
-
-/**
- * Log helper that accepts additional metadata
- */
-export function logWithMeta(
-  logger: pino.Logger,
-  level: string,
-  message: string,
-  meta?: Record<string, unknown>
-): void {
-  if (meta) {
-    (logger as any)[level](meta, message);
-  } else {
-    (logger as any)[level](message);
-  }
-}

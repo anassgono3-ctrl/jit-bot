@@ -1,39 +1,31 @@
 # Multi-stage Dockerfile for JIT Bot Foundation
-# Node 20 with pnpm support
+# Node 20 with npm (more stable than pnpm in CI)
 
 FROM node:20-alpine AS base
-
-# Enable corepack for pnpm
-RUN corepack enable
-RUN corepack prepare pnpm@9.12.0 --activate
 
 WORKDIR /app
 
 # Copy package files
-COPY package.json pnpm-workspace.yaml ./
+COPY package.json ./
 
 # Install dependencies
 FROM base AS deps
-RUN pnpm install --frozen-lockfile
+RUN npm install --frozen-lockfile
 
 # Build stage
 FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN pnpm run build
+RUN npm run build
 
 # Production stage
 FROM node:20-alpine AS production
 
-# Enable corepack for pnpm
-RUN corepack enable
-RUN corepack prepare pnpm@9.12.0 --activate
-
 WORKDIR /app
 
 # Copy package files and install production dependencies only
-COPY package.json pnpm-workspace.yaml ./
-RUN pnpm install --frozen-lockfile --prod
+COPY package.json ./
+RUN npm install --only=production
 
 # Copy built application
 COPY --from=build /app/dist ./dist

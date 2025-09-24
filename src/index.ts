@@ -34,8 +34,10 @@ class JitBot {
       // Load configuration
       const config = loadConfig();
       this.logger = createLogger(config.logLevel);
-      
-      this.logger.info(`Configuration loaded: chainId=${config.chainId}, pool=${config.uniswapV3PoolAddress}`);
+
+      this.logger.info(
+        `Configuration loaded: chainId=${config.chainId}, pool=${config.uniswapV3PoolAddress}`
+      );
 
       // Initialize HTTP provider
       this.httpProvider = new HttpProvider({
@@ -71,7 +73,9 @@ class JitBot {
 
       // Test pool connection by fetching current state
       const poolState = await this.pool.getState();
-      this.logger.info(`Pool initialized: ${this.pool.getAddress()}, tick=${poolState.tick}, fee=${poolState.fee}`);
+      this.logger.info(
+        `Pool initialized: ${this.pool.getAddress()}, tick=${poolState.tick}, fee=${poolState.fee}`
+      );
 
       // Initialize transaction executor
       this.executor = new TransactionExecutor(
@@ -80,7 +84,9 @@ class JitBot {
       );
 
       const balance = await this.executor.getBalance();
-      this.logger.info(`Transaction executor initialized: ${this.executor.getAddress()}, balance=${balance.toString()}`);
+      this.logger.info(
+        `Transaction executor initialized: ${this.executor.getAddress()}, balance=${balance.toString()}`
+      );
 
       // Initialize mempool watcher (if WebSocket provider available)
       if (this.wsProvider) {
@@ -90,7 +96,6 @@ class JitBot {
       }
 
       this.logger.info('✅ JIT Bot Foundation initialized successfully');
-
     } catch (error) {
       this.logger.error(`❌ Failed to initialize JIT Bot: ${String(error)}`);
       throw error;
@@ -102,12 +107,14 @@ class JitBot {
    */
   async start(): Promise<void> {
     await this.initialize();
-    
+
     // In the foundation, we just log that we're ready and exit cleanly
     // Future PRs will add the main event loop
     this.logger.info('🟢 JIT Bot is ready for opportunity detection');
-    this.logger.info('📝 This is the foundation - main loop will be added in future PRs');
-    
+    this.logger.info(
+      '📝 This is the foundation - main loop will be added in future PRs'
+    );
+
     // Schedule clean shutdown after demonstration
     setTimeout(() => {
       this.shutdown().catch(console.error);
@@ -119,7 +126,7 @@ class JitBot {
    */
   async shutdown(): Promise<void> {
     if (this.isShuttingDown) return;
-    
+
     this.isShuttingDown = true;
     this.logger.info('🛑 Shutting down JIT Bot');
 
@@ -151,7 +158,8 @@ class JitBot {
  */
 function setupGracefulShutdown(bot: JitBot): void {
   const shutdown = () => {
-    bot.shutdown()
+    bot
+      .shutdown()
       .then(() => process.exit(0))
       .catch((error) => {
         console.error('Shutdown error:', error);

@@ -80,11 +80,13 @@ pnpm install
 ### Configuration
 
 1. Copy the environment template:
+
 ```bash
 cp .env.example .env
 ```
 
 2. Edit `.env` with your configuration:
+
 ```bash
 # Required
 ETH_RPC_HTTP=https://your-ethereum-rpc-url
@@ -187,14 +189,14 @@ The foundation includes structured logging with pino. Future PRs will add:
 
 ## 🔧 Environment Variables
 
-| Variable | Required | Description | Default |
-|----------|----------|-------------|---------|
-| `ETH_RPC_HTTP` | Yes | HTTP RPC endpoint | - |
-| `ETH_RPC_WS` | No | WebSocket RPC endpoint | - |
-| `PRIVATE_KEY` | Yes | Private key (64 hex chars) | - |
-| `CHAIN_ID` | Yes | Ethereum chain ID | - |
-| `UNISWAP_V3_POOL_ADDRESS` | Yes | Target pool address | - |
-| `LOG_LEVEL` | No | Logging level | `info` |
+| Variable                  | Required | Description                | Default |
+| ------------------------- | -------- | -------------------------- | ------- |
+| `ETH_RPC_HTTP`            | Yes      | HTTP RPC endpoint          | -       |
+| `ETH_RPC_WS`              | No       | WebSocket RPC endpoint     | -       |
+| `PRIVATE_KEY`             | Yes      | Private key (64 hex chars) | -       |
+| `CHAIN_ID`                | Yes      | Ethereum chain ID          | -       |
+| `UNISWAP_V3_POOL_ADDRESS` | Yes      | Target pool address        | -       |
+| `LOG_LEVEL`               | No       | Logging level              | `info`  |
 
 ## 🚀 What's Next (Future PRs)
 
@@ -243,6 +245,7 @@ A production-ready Just-In-Time (JIT) liquidity provision bot that automatically
 ### Secrets Management
 
 1. **Copy the environment template:**
+
    ```bash
    cp .env.example .env
    ```
@@ -278,6 +281,7 @@ npm run dev
 ```
 
 **Simulation Features:**
+
 - ✅ **No real transactions** - completely safe testing
 - ✅ **Real market data** - uses actual pool states and prices
 - ✅ **Profit estimation** - calculates potential returns
@@ -295,6 +299,7 @@ ENABLE_FORK_SIM_PREFLIGHT=true npm run dev
 ```
 
 **Preflight Features:**
+
 - ✅ **Full sequence simulation** - flashloan → mint → burn → repay on local fork
 - ✅ **Real contract interactions** - validates against actual Uniswap V3 and Aave contracts
 - ✅ **Profitability validation** - precise USD profit calculations with real token prices
@@ -339,22 +344,26 @@ I_UNDERSTAND_LIVE_RISK=true
 ### Step-by-Step Live Execution Setup
 
 1. **Test extensively in simulation mode:**
+
    ```bash
    ENABLE_LIVE_EXECUTION=false npm run dev
    ```
 
 2. **Validate with fork simulation:**
+
    ```bash
    ENABLE_FORK_SIM_PREFLIGHT=true npm run dev
    ```
 
 3. **Set up Flashbots wallet:**
+
    ```bash
    # Generate new wallet for Flashbots signing
    FLASHBOTS_PRIVATE_KEY=0x... # Fund with ETH for gas
    ```
 
 4. **Configure live execution (testnet first!):**
+
    ```bash
    ENABLE_LIVE_EXECUTION=true
    ENABLE_FLASHBOTS=true
@@ -373,12 +382,14 @@ I_UNDERSTAND_LIVE_RISK=true
 ## 🚀 Features
 
 ### Core Strategy
+
 - **Multi-Pool Monitoring**: Concurrent monitoring of multiple Uniswap V3 pools with opportunity ranking
-- **Mempool Monitoring**: Real-time detection of large Uniswap V3 swaps across all target pools  
+- **Mempool Monitoring**: Real-time detection of large Uniswap V3 swaps across all target pools
 - **Opportunity Optimization**: Intelligent selection of the most profitable bundle per block
 - **Concentrated Liquidity**: Automated positioning around expected swap prices for maximum fee capture
 
 ### Execution Infrastructure (Production Hardened)
+
 - **Dual Flashloan Providers**: Balancer Vault (primary, no fees) with Aave V3 fallback (0.05% fee)
 - **Victim Transaction Inclusion**: Deterministic bundle ordering with raw signed transaction capture
 - **Bundle Validation**: Comprehensive ordering validation and profit guards before submission
@@ -387,7 +398,9 @@ I_UNDERSTAND_LIVE_RISK=true
 - **Live Execution Control**: Production-ready mainnet deployment with safety-first defaults
 
 #### Bundle Ordering
+
 Critical transaction ordering ensures profitable JIT execution:
+
 ```
 Transaction 0: JIT Mint (create concentrated liquidity)
 Transaction 1: Victim Swap (captured from mempool with raw bytes)
@@ -397,17 +410,20 @@ Transaction 2: JIT Burn/Collect (remove liquidity + collect fees)
 See [BUNDLE_ORDERING.md](docs/BUNDLE_ORDERING.md) for detailed documentation.
 
 ### Risk Management
+
 - **Pool-Level Risk Management**: Per-pool failure tracking, auto-disable, and cooldown mechanisms
 - **Gas Price Controls**: Strict gas price caps and optimization with real-time market adaptation
 - **Profitability Validation**: Multi-stage profit validation including USD-denominated thresholds
 - **Emergency Controls**: Pause functionality and comprehensive error handling
 
 ### Observability
+
 - **Advanced Metrics**: Pool-specific profit tracking, success rates, and comprehensive Prometheus metrics
 - **Structured Logging**: Request tracing, performance monitoring, and detailed execution logs
 - **Real-time Monitoring**: Live dashboards for opportunity detection, execution success, and system health
 
 ### Multi-chain & Configuration
+
 - **Multi-chain Support**: Ethereum mainnet and Arbitrum with extensible chain configuration
 - **Flexible Configuration**: Environment-based configuration with validation and hot-reloading
 - **Provider Abstraction**: Extensible flashloan provider system (Aave V3, future Compound V3)
@@ -417,42 +433,49 @@ See [BUNDLE_ORDERING.md](docs/BUNDLE_ORDERING.md) for detailed documentation.
 This release includes comprehensive production hardening features designed for secure and reliable mainnet deployment:
 
 ### Enhanced Flashloan Infrastructure
+
 - **Balancer Vault Primary**: Zero-fee flashloans with automatic liquidity checking
 - **Aave V3 Fallback**: 0.05% fee fallback when Balancer liquidity insufficient
 - **Provider Selection Logic**: Intelligent provider selection optimizing for cost and availability
 - **Comprehensive Fee Calculation**: Real-time fee estimation and profit optimization
 
 ### Deterministic Bundle Ordering
+
 - **Raw Transaction Capture**: Multi-strategy victim transaction capture from mempool
 - **Strict Bundle Validation**: Comprehensive ordering validation before submission
 - **Victim TX Inclusion**: Required victim transaction with raw signed bytes for deterministic execution
 - **Bundle Structure Enforcement**: [JIT Mint] → [Victim Swap] → [JIT Burn/Collect] ordering
 
 ### Enhanced JIT Executor Contract
+
 - **Dual Flashloan Callbacks**: Both Balancer `receiveFlashLoan` and Aave `executeOperation` support
 - **Atomic Profit Guard**: On-chain profit validation with configurable minimum thresholds
 - **Emergency Controls**: Pause/unpause, emergency withdraw, and configuration updates
 - **Event Tracking**: Comprehensive event emission for monitoring and debugging
 
 ### Fork Simulation & Testing
+
 - **Preflight Validation**: Complete end-to-end simulation on local mainnet fork
 - **Test Fixture Generation**: Automated generation of real mainnet transaction fixtures
 - **E2E Test Suite**: Comprehensive integration tests with profit validation
 - **Bundle Ordering Tests**: Specific tests for victim transaction inclusion and ordering
 
 ### Enhanced CI/CD Pipeline
+
 - **Multi-stage Validation**: lint-and-typecheck → build → validate-bundle-ordering → e2e-simulation
 - **Environment-gated Jobs**: Slither analysis and E2E tests gated by environment variables
 - **Artifact Generation**: Automated test reports and fixture validation
 - **Production Readiness Gates**: Profit threshold validation and comprehensive testing
 
 ### Monitoring & Alerting
+
 - **Bundle Ordering Metrics**: Track victim transaction inclusion and ordering violations
 - **Provider Selection Telemetry**: Monitor flashloan provider performance and fallbacks
 - **Profit Threshold Validation**: Ensure average profits meet production requirements ($25+ USD)
 - **Raw Transaction Capture Monitoring**: Track success rates of victim transaction capture
 
 ### Documentation & Compliance
+
 - **Bundle Ordering Guide**: Comprehensive documentation of victim transaction requirements
 - **Production Deployment Guide**: Step-by-step production hardening checklist
 - **Monitoring Playbooks**: Alert rules and troubleshooting guides
@@ -476,6 +499,7 @@ This release includes comprehensive production hardening features designed for s
 ## 🏗️ Architecture
 
 ### Multi-Pool Mode (Default)
+
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │  Pool           │    │  Opportunity    │    │  Bundle Builder │
@@ -492,6 +516,7 @@ This release includes comprehensive production hardening features designed for s
 ```
 
 ### Single-Pool Mode (Legacy)
+
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │  Mempool        │    │  Simulator      │    │  Bundle Builder │
@@ -532,17 +557,20 @@ This release includes comprehensive production hardening features designed for s
 ## 🔧 Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/your-username/jit-bot.git
    cd jit-bot
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Compile contracts**
+
    ```bash
    npm run build
    ```
@@ -566,27 +594,36 @@ This release includes comprehensive production hardening features designed for s
 ### Usage Guidelines
 
 - **Scripts and API calls**: Always pass amounts with 18 decimals using `ethers.utils.parseUnits(amount, 18)`
-- **Display formatting**: Convert for display using `ethers.utils.formatUnits(amount, 18)` 
+- **Display formatting**: Convert for display using `ethers.utils.formatUnits(amount, 18)`
 - **Token-native decimals**: Only used for final on-chain token transfers, not for orchestrator logic
 
 ### Examples
 
 ```javascript
 // ✅ Correct: Use 18 decimals for orchestrator
-const amount100USDC = utils.parseUnits("100", 18);
-await orchestrator.validateFlashloanParameters(usdcToken, amount100USDC, provider);
+const amount100USDC = utils.parseUnits('100', 18);
+await orchestrator.validateFlashloanParameters(
+  usdcToken,
+  amount100USDC,
+  provider
+);
 
 // ✅ Correct: Display with engine units
 console.log(`Amount: ${utils.formatUnits(amount100USDC, 18)} engine units`);
 
 // ❌ Incorrect: Don't use token-native decimals with orchestrator
-const wrongAmount = utils.parseUnits("100", 6); // USDC native decimals
-await orchestrator.validateFlashloanParameters(usdcToken, wrongAmount, provider); // Will fail validation
+const wrongAmount = utils.parseUnits('100', 6); // USDC native decimals
+await orchestrator.validateFlashloanParameters(
+  usdcToken,
+  wrongAmount,
+  provider
+); // Will fail validation
 ```
 
 This convention prevents confusion between token-specific decimal places and ensures consistent internal calculations across all supported tokens.
 
 2. **Configure environment variables**
+
    ```bash
    # ===============================
    # PR2: Live Execution Control
@@ -594,33 +631,33 @@ This convention prevents confusion between token-specific decimal places and ens
    ENABLE_LIVE_EXECUTION=false         # Enable live transaction execution
    ENABLE_FLASHBOTS=false              # Enable Flashbots integration
    ENABLE_FORK_SIM_PREFLIGHT=true      # Enable fork simulation preflight
-   
+
    # Production Safety (required for NODE_ENV=production with live execution)
    I_UNDERSTAND_LIVE_RISK=false        # Explicit acknowledgment for production live mode
-   
+
    # RPC Endpoints
    RPC_URL_HTTP=https://eth-mainnet.alchemyapi.io/v2/YOUR_KEY
    RPC_URL_WS=wss://eth-mainnet.ws.alchemyapi.io/v2/YOUR_KEY
-   
+
    # Wallet Configuration
    PRIVATE_KEY=0x...                   # Main wallet private key
    EXECUTOR_PRIVATE_KEY=0x...          # Optional: separate executor key
-   
+
    # Flashbots Configuration (required for live execution)
    FLASHBOTS_RELAY_URL=https://relay.flashbots.net
    FLASHBOTS_PRIVATE_KEY=0x...         # Required when ENABLE_FLASHBOTS=true
-   
+
    # Flashloan Configuration
    FLASHLOAN_PROVIDER=aave-v3          # Flashloan provider (aave-v3, compound-v3)
-   
+
    # Multi-Pool Configuration
    POOL_IDS=WETH-USDC-0.05%,ETH-USDT-0.3%,WBTC-ETH-0.3%
    GLOBAL_MIN_PROFIT_USD=10.0          # Minimum profit threshold in USD
    MAX_GAS_GWEI=100                    # Maximum gas price in gwei
-   
+
    # Fork Testing Configuration
    FORK_BLOCK_NUMBER=                  # Optional: specific block for fork testing
-   
+
    # Metrics & Monitoring
    PROMETHEUS_PORT=9090                # Prometheus metrics port
    ```
@@ -652,6 +689,7 @@ This convention prevents confusion between token-specific decimal places and ens
 The bot supports monitoring multiple Uniswap V3 pools simultaneously and selects the most profitable opportunity per block.
 
 ### Pool Selection
+
 ```bash
 # Enable multi-pool mode
 ENABLE_MULTI_POOL=true
@@ -664,6 +702,7 @@ PROFIT_THRESHOLD_USD=100.0
 ```
 
 ### Per-Pool Configuration
+
 ```bash
 # Pool-specific profit thresholds (optional)
 POOL_PROFIT_THRESHOLD_USD__WETH_USDC_0_05_=150
@@ -682,8 +721,8 @@ To verify mempool monitoring end-to-end, you can enable a verbose logger that pr
 
 Environment variable:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
+| Variable                | Description                                                                                                                                                                    | Default |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
 | `LOG_TARGET_POOL_SWAPS` | When `true`, logs token addresses, fee tier, direction, and human-readable amounts for every observed swap in targeted pools. Logs occur even if the swap is below thresholds. | `false` |
 
 Example:
@@ -704,13 +743,14 @@ For improved mempool monitoring and swap detection, the bot supports Alchemy's e
 
 Environment variable:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
+| Variable                 | Description                                                                                                                                                                  | Default |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
 | `USE_ALCHEMY_PENDING_TX` | When `true`, uses Alchemy's enhanced WebSocket subscription with Uniswap router filters. Receives full transaction objects directly and improves swap detection reliability. | `false` |
 
 Benefits of Alchemy mode:
+
 - ✅ **Full transaction objects** - receive complete tx data including input
-- ✅ **Filtered subscriptions** - only get transactions to Uniswap routers  
+- ✅ **Filtered subscriptions** - only get transactions to Uniswap routers
 - ✅ **Reduced latency** - skip additional RPC calls for transaction data
 - ✅ **Higher reliability** - better detection of swap transactions
 - ✅ **Fallback support** - automatically falls back to standard subscription if Alchemy is unavailable
@@ -729,8 +769,9 @@ npm run run
 ```
 
 The feature automatically filters for transactions sent to:
+
 - `0xE592427A0AEce92De3Edee1F18E0157C05861564` (Uniswap V3 SwapRouter)
-- `0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45` (SwapRouter02)  
+- `0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45` (SwapRouter02)
 - `0xEf1c6E67703c7BD7107eed8303Fbe6EC2554BF6B` (Universal Router)
 
 When enabled, you should see increased `SwapObserved` activity and `mempool_swaps_decoded_total` metrics.
@@ -741,11 +782,12 @@ For broader mempool coverage that works with any WebSocket-enabled Ethereum node
 
 Environment variable:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `USE_ABI_PENDING_FALLBACK` | When `true`, subscribes to generic pending tx hashes (eth_subscribe newPendingTransactions), fetches full tx objects, and decodes Uniswap router calls via ABI. Works with any WebSocket-enabled Ethereum node and provides broader mempool coverage. | `true` |
+| Variable                   | Description                                                                                                                                                                                                                                           | Default |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| `USE_ABI_PENDING_FALLBACK` | When `true`, subscribes to generic pending tx hashes (eth_subscribe newPendingTransactions), fetches full tx objects, and decodes Uniswap router calls via ABI. Works with any WebSocket-enabled Ethereum node and provides broader mempool coverage. | `true`  |
 
 Benefits of ABI fallback:
+
 - ✅ **Universal compatibility** - works with any WebSocket-enabled Ethereum node (Geth, Nethermind, Alchemy, Infura)
 - ✅ **Broader coverage** - captures all pending transactions, not just pre-filtered ones
 - ✅ **Provider independence** - not limited to specific RPC provider features
@@ -779,6 +821,7 @@ When both Alchemy and ABI fallback are enabled, the bot runs both subscriptions 
 4. **Source tracking** - metrics and logs track which path decoded each transaction
 
 Metrics include source labels to distinguish between capture methods:
+
 - `mempool_swaps_decoded_total{source="alchemy"}` - swaps from Alchemy subscription
 - `mempool_swaps_decoded_total{source="abi_fallback"}` - swaps from ABI fallback
 - `mempool_txs_seen_total{provider="abi_fallback"}` - total transactions processed by fallback
@@ -799,10 +842,10 @@ For advanced mempool monitoring and provider health diagnostics, the bot include
 
 Environment variables:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `LOG_ALL_PENDING_TX` | When `true`, count and log all pending transaction hashes before filtering/decoding | `false` |
-| `PENDING_FEED_WARN_THRESHOLD_PER_MIN` | Warning threshold for provider feed health (transactions per minute) | `100` |
+| Variable                              | Description                                                                         | Default |
+| ------------------------------------- | ----------------------------------------------------------------------------------- | ------- |
+| `LOG_ALL_PENDING_TX`                  | When `true`, count and log all pending transaction hashes before filtering/decoding | `false` |
+| `PENDING_FEED_WARN_THRESHOLD_PER_MIN` | Warning threshold for provider feed health (transactions per minute)                | `100`   |
 
 ### Features
 
@@ -851,6 +894,7 @@ RPC_URL_WS=wss://eth-mainnet.ws.alchemyapi.io/v2/YOUR_KEY node scripts/count-pen
 ```
 
 Features:
+
 - Minimal dependencies (only requires WebSocket connection)
 - Counts raw pending transaction hashes
 - Prints per-10s and per-60s totals
@@ -862,11 +906,12 @@ Features:
 The bot includes robust fallback handling for raw transaction retrieval:
 
 1. **Primary method**: `eth_getRawTransactionByHash` on main provider
-2. **Fallback method**: `eth_getRawTransactionByHash` on fallback provider (if configured)  
+2. **Fallback method**: `eth_getRawTransactionByHash` on fallback provider (if configured)
 3. **Reconstruction**: Raw transaction reconstruction from transaction object (if `ALLOW_RECONSTRUCT_RAW_TX=true`)
 4. **Graceful degradation**: Decoding continues without raw hex if all methods fail
 
 Benefits:
+
 - ✅ **Provider compatibility** - works even if provider doesn't support `eth_getRawTransactionByHash`
 - ✅ **No crashes** - absence of raw transaction data doesn't block decoding
 - ✅ **Automatic fallback** - tries multiple methods transparently
@@ -875,8 +920,9 @@ Benefits:
 ### Router Address Filtering (Previous Content)
 
 Both modes filter for transactions sent to canonical Uniswap router addresses:
+
 - `0xE592427A0AEce92De3Edee1F18E0157C05861564` (Uniswap V3 SwapRouter)
-- `0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45` (SwapRouter02)  
+- `0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45` (SwapRouter02)
 - `0xEf1c6E67703c7BD7107eed8303Fbe6EC2554BF6B` (Universal Router)
 
 See `reports/sample-pending-abi.json` for an example of captured transaction structure from the ABI fallback path.
@@ -888,7 +934,7 @@ See `reports/sample-pending-abi.json` for an example of captured transaction str
    - All candidates are evaluated for profitability
    - Only the most profitable opportunity is executed
    - Other opportunities are skipped to avoid gas waste
-3. **Pool Management**: 
+3. **Pool Management**:
    - Pools are automatically disabled after repeated failures
    - Disabled pools are re-enabled after a cooldown period
    - Pool status and metrics are tracked independently
@@ -949,6 +995,7 @@ This enables monitoring profitability across different pools and fee tiers indep
 - **Correct**: `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48` ✅ (Canonical USDC mainnet address)
 
 **Behavior:**
+
 - **Simulation mode**: Automatically corrects and logs a warning
 - **Live mode**: Throws an error and prevents execution with incorrect addresses
 
@@ -969,6 +1016,7 @@ npm run validate:env sepolia
 ```
 
 The validation script checks:
+
 - ✅ **Private Key**: Format and presence validation
 - ✅ **RPC URLs**: Automatic fallback from `RPC_URL_HTTP` to `ETHEREUM_RPC_URL`
 - ✅ **Address Variables**: `PROFIT_RECIPIENT` and `POSITION_MANAGER` validation
@@ -979,15 +1027,15 @@ The validation script checks:
 
 Key environment variables:
 
-| Variable | Description | Required | Default | Example |
-|----------|-------------|----------|---------|---------|
-| `PRIVATE_KEY` | Deployer private key | Yes | - | `0x123...` |
-| `ETHEREUM_RPC_URL` | Primary RPC endpoint | Yes* | - | `https://eth-mainnet.alchemyapi.io/v2/...` |
-| `RPC_URL_HTTP` | Fallback RPC endpoint | No | - | `https://rpc.ankr.com/eth` |
-| `PROFIT_RECIPIENT` | Address to receive profits | No | Deployer address | `0xabc...` |
-| `POSITION_MANAGER` | Uniswap V3 Position Manager | No | `0xC36442b4a4522E871399CD717aBDD847Ab11FE88` | - |
-| `MIN_PROFIT_THRESHOLD` | Min profit in ETH | No | `0.01` | `0.01` |
-| `MAX_LOAN_SIZE` | Max loan size in ETH | No | `1000` | `1000` |
+| Variable               | Description                 | Required | Default                                      | Example                                    |
+| ---------------------- | --------------------------- | -------- | -------------------------------------------- | ------------------------------------------ |
+| `PRIVATE_KEY`          | Deployer private key        | Yes      | -                                            | `0x123...`                                 |
+| `ETHEREUM_RPC_URL`     | Primary RPC endpoint        | Yes\*    | -                                            | `https://eth-mainnet.alchemyapi.io/v2/...` |
+| `RPC_URL_HTTP`         | Fallback RPC endpoint       | No       | -                                            | `https://rpc.ankr.com/eth`                 |
+| `PROFIT_RECIPIENT`     | Address to receive profits  | No       | Deployer address                             | `0xabc...`                                 |
+| `POSITION_MANAGER`     | Uniswap V3 Position Manager | No       | `0xC36442b4a4522E871399CD717aBDD847Ab11FE88` | -                                          |
+| `MIN_PROFIT_THRESHOLD` | Min profit in ETH           | No       | `0.01`                                       | `0.01`                                     |
+| `MAX_LOAN_SIZE`        | Max loan size in ETH        | No       | `1000`                                       | `1000`                                     |
 
 **\*Note**: Either `ETHEREUM_RPC_URL` or `RPC_URL_HTTP` is required for mainnet deployment. The system will automatically use `RPC_URL_HTTP` as fallback if `ETHEREUM_RPC_URL` is not set.
 
@@ -1011,6 +1059,7 @@ echo "JIT_CONTRACT_ADDRESS=<deployed_address>" >> .env
 **⚠️ CRITICAL SAFETY WARNING ⚠️**
 
 Mainnet deployment involves real funds and carries significant financial risk. Only proceed if you:
+
 - Have thoroughly tested on forks
 - Understand MEV competition dynamics
 - Have monitoring and alerting in place
@@ -1044,6 +1093,7 @@ The deployment system now provides enhanced error detection and resolution:
 - **Descriptive Failures**: Specific error messages for common deployment issues
 
 **Example Error Messages:**
+
 ```bash
 ❌ Environment variable PROFIT_RECIPIENT contains invalid address: ""
 ❌ ETHEREUM_RPC_URL (or RPC_URL_HTTP) is required for mainnet deployment
@@ -1051,11 +1101,13 @@ The deployment system now provides enhanced error detection and resolution:
 ```
 
 1. **Deploy contracts**
+
    ```bash
    npx hardhat run scripts/deploy.ts --network mainnet
    ```
 
 2. **Update contract address**
+
    ```bash
    echo "JIT_CONTRACT_ADDRESS=0x..." >> .env
    ```
@@ -1066,6 +1118,7 @@ The deployment system now provides enhanced error detection and resolution:
 ## 🎮 Usage
 
 ### Multi-Pool Mode (Recommended)
+
 ```bash
 # Set up multi-pool configuration
 export ENABLE_MULTI_POOL=true
@@ -1077,6 +1130,7 @@ npm run dev
 ```
 
 ### Single-Pool Mode (Legacy)
+
 ```bash
 # Disable multi-pool mode
 export ENABLE_MULTI_POOL=false
@@ -1086,17 +1140,20 @@ npm run dev
 ```
 
 ### Development Mode
+
 ```bash
 npm run dev
 ```
 
 ### Production Mode
+
 ```bash
 npm run build
 npm start
 ```
 
 ### Live Execution Mode
+
 ```bash
 # Set production environment
 export NODE_ENV=production
@@ -1108,6 +1165,7 @@ npm run live -- start
 ```
 
 ### Fork Simulation Mode
+
 ```bash
 # Start a local fork of Ethereum mainnet
 npm run fork
@@ -1117,11 +1175,13 @@ npm run fork:simulate
 ```
 
 ### Docker Deployment
+
 ```bash
 docker-compose up -d
 ```
 
 ### CLI Commands
+
 ```bash
 # Start the bot
 node dist/bot/index.js start
@@ -1145,6 +1205,7 @@ node dist/bot/index.js status
 ```
 
 Example output:
+
 ```json
 {
   "isRunning": true,
@@ -1182,17 +1243,20 @@ The JIT LP bot includes a comprehensive forked mainnet simulation environment th
 ### Running Fork Simulations
 
 1. **Set up environment variables:**
+
    ```bash
    cp .env.example .env
    # Edit .env and set ETHEREUM_RPC_URL
    ```
 
 2. **Run simulation against current mainnet state:**
+
    ```bash
    npm run fork:simulate
    ```
 
 3. **Run simulation at a specific block:**
+
    ```bash
    FORK_BLOCK_NUMBER=18500000 npm run fork:simulate
    ```
@@ -1215,19 +1279,19 @@ The JIT LP bot includes a comprehensive forked mainnet simulation environment th
 The simulation targets high-volume Uniswap V3 pools:
 
 - **WETH/USDC 0.05%** (0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640)
-- **ETH/USDT 0.3%** (0x4e68Ccd3E89f51C3074ca5072bbAC773960dFa36)  
+- **ETH/USDT 0.3%** (0x4e68Ccd3E89f51C3074ca5072bbAC773960dFa36)
 - **WBTC/ETH 0.3%** (0xCBCdF9626bC03E24f779434178A73a0B4bad62eD)
 
 ### Configuration Options
 
 Environment variables for fork simulation:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `FORK_BLOCK_NUMBER` | Specific block to fork from | Latest |
-| `TARGET_POOLS` | Comma-separated list of pools | All configured pools |
-| `SIMULATION_GAS_PRICE_GWEI` | Gas price for simulations | 20 |
-| `SIMULATION_REPORT_DIR` | Directory for reports | ./reports |
+| Variable                    | Description                   | Default              |
+| --------------------------- | ----------------------------- | -------------------- |
+| `FORK_BLOCK_NUMBER`         | Specific block to fork from   | Latest               |
+| `TARGET_POOLS`              | Comma-separated list of pools | All configured pools |
+| `SIMULATION_GAS_PRICE_GWEI` | Gas price for simulations     | 20                   |
+| `SIMULATION_REPORT_DIR`     | Directory for reports         | ./reports            |
 
 ### Report Generation
 
@@ -1240,6 +1304,7 @@ Simulations generate detailed reports in the `/reports` directory:
 - **Success Metrics**: Profitability rates and optimal scenarios
 
 Example report structure:
+
 ```json
 {
   "metadata": {
@@ -1278,6 +1343,7 @@ echo "JIT_CONTRACT_ADDRESS=<deployed_address>" >> .env
 **⚠️ CRITICAL SAFETY WARNING ⚠️**
 
 Mainnet deployment involves real funds and carries significant financial risk. Only proceed if you:
+
 - Have thoroughly tested on forks
 - Understand MEV competition dynamics
 - Have monitoring and alerting in place
@@ -1305,17 +1371,17 @@ docker-compose -f docker-compose.monitoring.yml up -d
 
 Environment variables for deployment:
 
-| Variable | Description | Required | Example |
-|----------|-------------|----------|---------|
-| `PRIVATE_KEY` | Deployer private key | Yes | `0x123...` |
-| `ETHEREUM_RPC_URL` | Primary RPC endpoint | Yes* | `https://...` |
-| `RPC_URL_HTTP` | Fallback RPC endpoint | No | `https://rpc.ankr.com/eth` |
-| `PROFIT_RECIPIENT` | Profit recipient address | No | `0xabc...` (defaults to deployer) |
-| `POSITION_MANAGER` | Uniswap V3 Position Manager | No | (defaults to mainnet address) |
-| `MIN_PROFIT_THRESHOLD` | Min profit in ETH | No | `0.01` |
-| `MAX_LOAN_SIZE` | Max loan size in ETH | No | `1000` |
-| `VERIFY_CONTRACTS` | Verify on Etherscan | No | `true` |
-| `ETHERSCAN_API_KEY` | Etherscan API key | No | `ABC123...` |
+| Variable               | Description                 | Required | Example                           |
+| ---------------------- | --------------------------- | -------- | --------------------------------- |
+| `PRIVATE_KEY`          | Deployer private key        | Yes      | `0x123...`                        |
+| `ETHEREUM_RPC_URL`     | Primary RPC endpoint        | Yes\*    | `https://...`                     |
+| `RPC_URL_HTTP`         | Fallback RPC endpoint       | No       | `https://rpc.ankr.com/eth`        |
+| `PROFIT_RECIPIENT`     | Profit recipient address    | No       | `0xabc...` (defaults to deployer) |
+| `POSITION_MANAGER`     | Uniswap V3 Position Manager | No       | (defaults to mainnet address)     |
+| `MIN_PROFIT_THRESHOLD` | Min profit in ETH           | No       | `0.01`                            |
+| `MAX_LOAN_SIZE`        | Max loan size in ETH        | No       | `1000`                            |
+| `VERIFY_CONTRACTS`     | Verify on Etherscan         | No       | `true`                            |
+| `ETHERSCAN_API_KEY`    | Etherscan API key           | No       | `ABC123...`                       |
 
 **\*Note**: Either `ETHEREUM_RPC_URL` or `RPC_URL_HTTP` is required. The system automatically uses `RPC_URL_HTTP` as fallback for backward compatibility.
 
@@ -1351,12 +1417,12 @@ npm run live:status
 
 ### Live Mode Configuration
 
-| Variable | Description | Default | Mainnet Recommended |
-|----------|-------------|---------|-------------------|
-| `PROFIT_THRESHOLD_USD` | Min profit in USD | `10.0` | `50.0` - `100.0` |
-| `MAX_GAS_GWEI` | Max gas price in gwei | `100` | `150` - `200` |
-| `FLASHBOTS_RELAY_URL` | Flashbots endpoint | Required | `https://relay.flashbots.net` |
-| `FLASHBOTS_PRIVATE_KEY` | Flashbots signing key | Optional | Recommended |
+| Variable                | Description           | Default  | Mainnet Recommended           |
+| ----------------------- | --------------------- | -------- | ----------------------------- |
+| `PROFIT_THRESHOLD_USD`  | Min profit in USD     | `10.0`   | `50.0` - `100.0`              |
+| `MAX_GAS_GWEI`          | Max gas price in gwei | `100`    | `150` - `200`                 |
+| `FLASHBOTS_RELAY_URL`   | Flashbots endpoint    | Required | `https://relay.flashbots.net` |
+| `FLASHBOTS_PRIVATE_KEY` | Flashbots signing key | Optional | Recommended                   |
 
 ### Live Mode Safety Checks
 
@@ -1386,12 +1452,14 @@ curl http://localhost:3001/alerts
 ### Emergency Procedures
 
 #### Emergency Pause
+
 ```solidity
 // Call from owner address
 jitExecutor.setPaused(true);
 ```
 
 #### Stuck Fund Recovery
+
 ```solidity
 // Withdraw ETH
 jitExecutor.emergencyWithdraw(address(0), amount);
@@ -1401,6 +1469,7 @@ jitExecutor.emergencyWithdraw(tokenAddress, amount);
 ```
 
 #### Emergency Shutdown
+
 ```bash
 # Graceful shutdown
 pkill -SIGTERM -f "npm run live"
@@ -1420,6 +1489,7 @@ docker-compose -f docker-compose.monitoring.yml up -d
 ```
 
 This deploys:
+
 - **Prometheus**: Metrics collection (`http://localhost:9090`)
 - **Grafana**: Visualization (`http://localhost:3000`)
 - **AlertManager**: Alert routing (`http://localhost:9093`)
@@ -1428,12 +1498,14 @@ This deploys:
 ### Key Dashboards
 
 #### JIT Bot Metrics (`http://localhost:3001/metrics`)
+
 - Real-time profit tracking
 - Execution success rates
 - Error monitoring
 - Performance metrics
 
 #### Prometheus Metrics (`http://localhost:3001/metrics/prometheus`)
+
 - `jit_bot_swaps_detected_total`: Total opportunities detected
 - `jit_bot_bundles_included_total`: Successful executions
 - `jit_bot_realized_profit_eth`: Live mode profits
@@ -1442,6 +1514,7 @@ This deploys:
 - `jit_bot_gas_efficiency`: Profit/gas ratio
 
 #### Health Checks (`http://localhost:3001/health`)
+
 - System status
 - Recent activity validation
 - Error rate monitoring
@@ -1490,6 +1563,7 @@ receivers:
 ### Risk Disclosure
 
 ⚠️ **Warning**: This bot involves significant financial risks:
+
 - Smart contract risks
 - Flash loan failures
 - MEV competition
@@ -1502,6 +1576,7 @@ Only use funds you can afford to lose and understand the risks involved.
 ## 🧪 Development
 
 ### Running Tests
+
 ```bash
 # Unit tests (TypeScript - compatible with Node 20+)
 npm run test:unit
@@ -1520,6 +1595,7 @@ npm run ci
 ```
 
 ### Simulation Scripts
+
 ```bash
 # Run example simulation
 npm run simulate
@@ -1529,6 +1605,7 @@ npx ts-node scripts/simulateExample.ts
 ```
 
 ### Code Quality
+
 ```bash
 # Linting
 npm run lint
@@ -1579,20 +1656,20 @@ jit-bot/
 
 ## 📝 Environment Variables
 
-| Variable | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `ETHEREUM_RPC_URL` | Ethereum RPC endpoint | Yes | - |
-| `ARBITRUM_RPC_URL` | Arbitrum RPC endpoint | No | - |
-| `PRIVATE_KEY` | Bot wallet private key | Yes | - |
-| `FLASHBOTS_PRIVATE_KEY` | Flashbots signing key | No | - |
-| `JIT_CONTRACT_ADDRESS` | Deployed contract address | Yes | - |
-| `MIN_PROFIT_THRESHOLD` | Minimum profit in ETH | No | 0.01 |
-| `MAX_LOAN_SIZE` | Maximum flash loan size | No | 1000000 |
-| `METRICS_PORT` | Metrics server port | No | 3001 |
-| `FORK_BLOCK_NUMBER` | Block number for forking | No | Latest |
-| `TARGET_POOLS` | Pools for simulation | No | All configured |
-| `SIMULATION_GAS_PRICE_GWEI` | Gas price for simulations | No | 20 |
-| `SIMULATION_REPORT_DIR` | Reports directory | No | ./reports |
+| Variable                    | Description               | Required | Default        |
+| --------------------------- | ------------------------- | -------- | -------------- |
+| `ETHEREUM_RPC_URL`          | Ethereum RPC endpoint     | Yes      | -              |
+| `ARBITRUM_RPC_URL`          | Arbitrum RPC endpoint     | No       | -              |
+| `PRIVATE_KEY`               | Bot wallet private key    | Yes      | -              |
+| `FLASHBOTS_PRIVATE_KEY`     | Flashbots signing key     | No       | -              |
+| `JIT_CONTRACT_ADDRESS`      | Deployed contract address | Yes      | -              |
+| `MIN_PROFIT_THRESHOLD`      | Minimum profit in ETH     | No       | 0.01           |
+| `MAX_LOAN_SIZE`             | Maximum flash loan size   | No       | 1000000        |
+| `METRICS_PORT`              | Metrics server port       | No       | 3001           |
+| `FORK_BLOCK_NUMBER`         | Block number for forking  | No       | Latest         |
+| `TARGET_POOLS`              | Pools for simulation      | No       | All configured |
+| `SIMULATION_GAS_PRICE_GWEI` | Gas price for simulations | No       | 20             |
+| `SIMULATION_REPORT_DIR`     | Reports directory         | No       | ./reports      |
 
 ## 🔧 Troubleshooting
 
@@ -1616,6 +1693,7 @@ npm run live:status
 #### Setting Environment Variables
 
 **Option 1: PowerShell (Recommended)**
+
 ```powershell
 # Set environment variables for current session
 $env:ENABLE_LIVE_EXECUTION = "true"
@@ -1625,8 +1703,9 @@ npm run live -- start
 ```
 
 **Option 2: Windows CMD**
+
 ```cmd
-REM Set environment variables for current session  
+REM Set environment variables for current session
 set ENABLE_LIVE_EXECUTION=true
 set NODE_ENV=production
 set I_UNDERSTAND_LIVE_RISK=true
@@ -1634,6 +1713,7 @@ npm run live -- start
 ```
 
 **Option 3: Use .env file (Cross-platform)**
+
 ```bash
 # Create/edit .env file with your configuration
 echo ENABLE_LIVE_EXECUTION=true >> .env
@@ -1651,6 +1731,7 @@ npm run live -- start
 This project uses **ethers v5** for compatibility reasons. If you encounter `ERESOLVE` peer dependency conflicts during `npm install`, follow these steps:
 
 #### Windows Commands
+
 ```cmd
 # Clean installation
 rmdir /s /q node_modules
@@ -1659,6 +1740,7 @@ npm install
 ```
 
 #### Linux/macOS Commands
+
 ```bash
 # Clean installation
 rm -rf node_modules package-lock.json
@@ -1670,6 +1752,7 @@ npm install
 The project maintains compatibility with **ethers v5** while many newer Hardhat plugins require **ethers v6**. This creates peer dependency conflicts.
 
 **Our Solution:**
+
 - Uses `@nomiclabs/hardhat-ethers@^2.2.3` (supports ethers v5)
 - Instead of `@nomicfoundation/hardhat-ethers@^3.x` (requires ethers v6)
 - Pins `ethers@^5.7.2` for stability
@@ -1678,6 +1761,7 @@ The project maintains compatibility with **ethers v5** while many newer Hardhat 
 #### Last Resort Option
 
 If you still encounter issues, you can use the legacy peer deps resolver (not recommended):
+
 ```bash
 npm install --legacy-peer-deps
 ```
@@ -1687,6 +1771,7 @@ npm install --legacy-peer-deps
 #### Verification
 
 After installation, verify everything works:
+
 ```bash
 # Check versions
 npm ls ethers @nomiclabs/hardhat-ethers
@@ -1699,6 +1784,7 @@ npx tsc --noEmit
 ```
 
 Expected output should show:
+
 - `ethers@5.x.x`
 - `@nomiclabs/hardhat-ethers@2.x.x`
 
@@ -1709,12 +1795,14 @@ Expected output should show:
 If you're seeing "0 opportunities" despite active trading on target pools:
 
 1. **Enable detailed logging:**
+
    ```bash
    export LOG_TARGET_POOL_SWAPS=true
    export ALLOW_RECONSTRUCT_RAW_TX=true
    ```
 
 2. **Lower thresholds for testing:**
+
    ```bash
    export MIN_SWAP_ETH=0
    export MIN_SWAP_USD=0
@@ -1732,16 +1820,17 @@ If you're seeing "0 opportunities" despite active trading on target pools:
    - Enable raw transaction reconstruction with `ALLOW_RECONSTRUCT_RAW_TX=true`
 
 5. **Debug sequence:**
+
    ```bash
    # Start with maximum logging
    export LOG_TARGET_POOL_SWAPS=true
    export MIN_SWAP_ETH=0
    export MIN_SWAP_USD=0
    export ALLOW_RECONSTRUCT_RAW_TX=true
-   
+
    # Run in development mode
    npm run dev
-   
+
    # Watch for these log messages:
    # - "SwapObserved" = successful decode
    # - "PendingSwapDetected" = candidate emitted

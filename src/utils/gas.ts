@@ -11,11 +11,11 @@ import { formatUnits, parseUnits } from 'ethers';
 export async function getGasPriceGwei(provider: Provider): Promise<number> {
   const feeData = await provider.getFeeData();
   const gasPrice = feeData.gasPrice;
-  
+
   if (!gasPrice) {
     throw new Error('Unable to fetch gas price');
   }
-  
+
   return parseFloat(formatUnits(gasPrice, 'gwei'));
 }
 

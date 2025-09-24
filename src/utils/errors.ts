@@ -6,7 +6,10 @@
  * Base error class for JIT bot operations
  */
 export class JitBotError extends Error {
-  constructor(message: string, public readonly code?: string) {
+  constructor(
+    message: string,
+    public readonly code?: string
+  ) {
     super(message);
     this.name = 'JitBotError';
   }

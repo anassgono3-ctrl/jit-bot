@@ -9,9 +9,9 @@ groups:
           severity: critical
           component: jit-bot
         annotations:
-          summary: "JIT Bot is down"
-          description: "JIT Bot has been down for more than 1 minute"
-          runbook_url: "https://github.com/anassgounnou36-tech/jit-bot/blob/main/docs/runbooks/bot-down.md"
+          summary: 'JIT Bot is down'
+          description: 'JIT Bot has been down for more than 1 minute'
+          runbook_url: 'https://github.com/anassgounnou36-tech/jit-bot/blob/main/docs/runbooks/bot-down.md'
 
       - alert: HighErrorRate
         expr: rate(jit_executions_failed_total[5m]) / rate(jit_executions_total[5m]) > 0.1
@@ -20,9 +20,9 @@ groups:
           severity: critical
           component: execution
         annotations:
-          summary: "High JIT execution error rate"
-          description: "JIT execution error rate is {{ $value | humanizePercentage }} over the last 5 minutes"
-          runbook_url: "https://github.com/anassgounnou36-tech/jit-bot/blob/main/docs/runbooks/high-error-rate.md"
+          summary: 'High JIT execution error rate'
+          description: 'JIT execution error rate is {{ $value | humanizePercentage }} over the last 5 minutes'
+          runbook_url: 'https://github.com/anassgounnou36-tech/jit-bot/blob/main/docs/runbooks/high-error-rate.md'
 
       - alert: FlashbotsBundleFailures
         expr: rate(flashbots_bundles_failed_total[5m]) / rate(flashbots_bundles_total[5m]) > 0.8
@@ -31,8 +31,8 @@ groups:
           severity: high
           component: flashbots
         annotations:
-          summary: "High Flashbots bundle failure rate"
-          description: "Flashbots bundle failure rate is {{ $value | humanizePercentage }} over the last 5 minutes"
+          summary: 'High Flashbots bundle failure rate'
+          description: 'Flashbots bundle failure rate is {{ $value | humanizePercentage }} over the last 5 minutes'
 
       - alert: LowProfitability
         expr: rate(jit_profit_usd_total[10m]) < 10
@@ -41,8 +41,8 @@ groups:
           severity: warning
           component: profitability
         annotations:
-          summary: "Low JIT profitability"
-          description: "JIT profit rate is ${{ $value }}/10min, below expected threshold"
+          summary: 'Low JIT profitability'
+          description: 'JIT profit rate is ${{ $value }}/10min, below expected threshold'
 
       # Medium-Priority Alerts
       - alert: HighGasUsage
@@ -52,8 +52,8 @@ groups:
           severity: warning
           component: gas-optimization
         annotations:
-          summary: "High gas usage detected"
-          description: "Average gas usage is {{ $value }} over the last 5 minutes"
+          summary: 'High gas usage detected'
+          description: 'Average gas usage is {{ $value }} over the last 5 minutes'
 
       - alert: BlockLatencyHigh
         expr: avg_over_time(jit_block_latency_seconds[5m]) > 3
@@ -62,8 +62,8 @@ groups:
           severity: warning
           component: latency
         annotations:
-          summary: "High block processing latency"
-          description: "Average block latency is {{ $value }}s over the last 5 minutes"
+          summary: 'High block processing latency'
+          description: 'Average block latency is {{ $value }}s over the last 5 minutes'
 
       - alert: MempoolProcessingLag
         expr: increase(mempool_transactions_processed_total[1m]) < 10
@@ -72,8 +72,8 @@ groups:
           severity: warning
           component: mempool
         annotations:
-          summary: "Low mempool processing rate"
-          description: "Only {{ $value }} mempool transactions processed in the last minute"
+          summary: 'Low mempool processing rate'
+          description: 'Only {{ $value }} mempool transactions processed in the last minute'
 
       - alert: FlashloanProviderImbalance
         expr: |
@@ -86,8 +86,8 @@ groups:
           severity: info
           component: flashloan-providers
         annotations:
-          summary: "Balancer flashloan usage very low"
-          description: "Balancer usage is {{ $value | humanizePercentage }}, may indicate liquidity issues"
+          summary: 'Balancer flashloan usage very low'
+          description: 'Balancer usage is {{ $value | humanizePercentage }}, may indicate liquidity issues'
 
       # System Health Alerts
       - alert: MemoryUsageHigh
@@ -97,8 +97,8 @@ groups:
           severity: warning
           component: system
         annotations:
-          summary: "High memory usage"
-          description: "JIT Bot memory usage is {{ $value | humanizeBytes }}"
+          summary: 'High memory usage'
+          description: 'JIT Bot memory usage is {{ $value | humanizeBytes }}'
 
       - alert: TooManyRestarts
         expr: increase(process_start_time_seconds{job="jit-bot"}[1h]) > 3
@@ -107,8 +107,8 @@ groups:
           severity: warning
           component: stability
         annotations:
-          summary: "JIT Bot restarting frequently"
-          description: "JIT Bot has restarted {{ $value }} times in the last hour"
+          summary: 'JIT Bot restarting frequently'
+          description: 'JIT Bot has restarted {{ $value }} times in the last hour'
 
       # Business Logic Alerts
       - alert: OpportunityDetectionLow
@@ -118,8 +118,8 @@ groups:
           severity: info
           component: opportunity-detection
         annotations:
-          summary: "Low opportunity detection rate"
-          description: "Only {{ $value }} opportunities detected per 10 minutes"
+          summary: 'Low opportunity detection rate'
+          description: 'Only {{ $value }} opportunities detected per 10 minutes'
 
       - alert: BundleInclusionRateLow
         expr: rate(flashbots_bundles_included_total[15m]) / rate(flashbots_bundles_submitted_total[15m]) < 0.1
@@ -128,8 +128,8 @@ groups:
           severity: warning
           component: bundle-inclusion
         annotations:
-          summary: "Low bundle inclusion rate"
-          description: "Bundle inclusion rate is {{ $value | humanizePercentage }} over 15 minutes"
+          summary: 'Low bundle inclusion rate'
+          description: 'Bundle inclusion rate is {{ $value | humanizePercentage }} over 15 minutes'
 
       - alert: VictimTransactionParsingFailures
         expr: rate(mempool_victim_tx_parsing_failed_total[5m]) > 5
@@ -138,8 +138,8 @@ groups:
           severity: info
           component: transaction-parsing
         annotations:
-          summary: "High victim transaction parsing failure rate"
-          description: "{{ $value }} victim transaction parsing failures per 5 minutes"
+          summary: 'High victim transaction parsing failure rate'
+          description: '{{ $value }} victim transaction parsing failures per 5 minutes'
 
       # Security Alerts
       - alert: UnexpectedContractCall
@@ -149,8 +149,8 @@ groups:
           severity: critical
           component: security
         annotations:
-          summary: "Unexpected contract calls detected"
-          description: "{{ $value }} unexpected calls to JIT contract in last 5 minutes"
+          summary: 'Unexpected contract calls detected'
+          description: '{{ $value }} unexpected calls to JIT contract in last 5 minutes'
 
       - alert: ProfitThresholdViolation
         expr: increase(jit_profit_threshold_violations_total[5m]) > 0
@@ -159,8 +159,8 @@ groups:
           severity: high
           component: profit-guard
         annotations:
-          summary: "Profit threshold violations detected"
-          description: "{{ $value }} profit threshold violations in last 5 minutes"
+          summary: 'Profit threshold violations detected'
+          description: '{{ $value }} profit threshold violations in last 5 minutes'
 
       # Network and Infrastructure
       - alert: RpcProviderErrors
@@ -170,8 +170,8 @@ groups:
           severity: warning
           component: rpc-provider
         annotations:
-          summary: "High RPC provider error rate"
-          description: "RPC error rate is {{ $value | humanizePercentage }} over 5 minutes"
+          summary: 'High RPC provider error rate'
+          description: 'RPC error rate is {{ $value | humanizePercentage }} over 5 minutes'
 
       - alert: WebsocketConnectionLost
         expr: websocket_connection_status{job="jit-bot"} == 0
@@ -180,8 +180,8 @@ groups:
           severity: high
           component: websocket
         annotations:
-          summary: "WebSocket connection lost"
-          description: "Mempool WebSocket connection has been lost"
+          summary: 'WebSocket connection lost'
+          description: 'Mempool WebSocket connection has been lost'
 
   - name: jit-bot-predictive-alerts
     rules:
@@ -197,8 +197,8 @@ groups:
           severity: info
           component: profitability-trend
         annotations:
-          summary: "Profitability declining trend"
-          description: "Profit rate has declined by ${{ $value }} compared to 1 hour ago"
+          summary: 'Profitability declining trend'
+          description: 'Profit rate has declined by ${{ $value }} compared to 1 hour ago'
 
       - alert: GasEfficiencyDegrading
         expr: |
@@ -211,5 +211,5 @@ groups:
           severity: info
           component: gas-efficiency-trend
         annotations:
-          summary: "Gas efficiency degrading"
-          description: "Average gas usage increased by {{ $value }} compared to 1 hour ago"
+          summary: 'Gas efficiency degrading'
+          description: 'Average gas usage increased by {{ $value }} compared to 1 hour ago'

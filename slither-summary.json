@@ -21,7 +21,7 @@
             "recommendation": "Add zero-address validation for critical addresses"
           },
           {
-            "severity": "low", 
+            "severity": "low",
             "detector": "events-maths",
             "description": "JitExecutor.executeJitStrategy should emit an event for liquidity calculations",
             "recommendation": "Consider emitting events for major state changes"
@@ -34,7 +34,7 @@
           },
           {
             "severity": "informational",
-            "detector": "solc-version", 
+            "detector": "solc-version",
             "description": "Pragma version ^0.8.19 allows old versions",
             "recommendation": "Consider using specific version for production"
           },
@@ -63,7 +63,7 @@
             "recommendation": "Use external for functions called from outside"
           },
           {
-            "severity": "optimization", 
+            "severity": "optimization",
             "detector": "immutable-states",
             "description": "JitExecutor.positionManager should be immutable",
             "recommendation": "Use immutable for addresses set in constructor"
@@ -72,7 +72,7 @@
       },
       {
         "name": "SimpleJitExecutor",
-        "file": "contracts/SimpleJitExecutor.sol", 
+        "file": "contracts/SimpleJitExecutor.sol",
         "detectors": {
           "high": 0,
           "medium": 0,
@@ -88,14 +88,14 @@
             "recommendation": "Add zero-address checks"
           },
           {
-            "severity": "informational", 
+            "severity": "informational",
             "detector": "pragma",
             "description": "Different pragma directives",
             "recommendation": "Use consistent pragma"
           },
           {
             "severity": "informational",
-            "detector": "naming-convention", 
+            "detector": "naming-convention",
             "description": "Follow mixedCase convention",
             "recommendation": "Update variable names"
           },
@@ -132,7 +132,7 @@
     "implemented": true,
     "validations": [
       "minProfit parameter validation in executeJitStrategy",
-      "Balance check before and after flashloan execution", 
+      "Balance check before and after flashloan execution",
       "Revert on insufficient profit with custom error",
       "Proper profit calculation accounting for fees"
     ],
@@ -152,7 +152,7 @@
       "securityChecks": "PASS"
     },
     "aaveIntegration": {
-      "implemented": true, 
+      "implemented": true,
       "callback": "executeOperation",
       "parameterValidation": "PASS",
       "feeCalculation": "IMPLEMENTED",

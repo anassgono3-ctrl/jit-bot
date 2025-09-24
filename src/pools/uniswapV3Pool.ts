@@ -50,7 +50,9 @@ export class UniswapV3Pool {
         liquidity: liquidityResult,
       };
 
-      logger.debug(`Pool state fetched: address=${this.address}, tick=${poolState.tick}, fee=${poolState.fee}`);
+      logger.debug(
+        `Pool state fetched: address=${this.address}, tick=${poolState.tick}, fee=${poolState.fee}`
+      );
 
       return poolState;
     } catch (error) {

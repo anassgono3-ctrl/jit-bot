@@ -96,17 +96,19 @@ graph TD
     B --> C
     C --> E[Summary]
     D --> E
-    
+
     F[E2E Simulation] --> G[E2E Summary]
     H[Static Analysis] --> G
 ```
 
 ### Main CI
+
 - All jobs run in parallel after lint-typecheck
 - Summary depends on all mandatory jobs
 - **All jobs must pass for merge**
 
 ### E2E CI
+
 - Jobs are independent and optional
 - **Failures do not block merge**
 - Jobs only run when explicitly enabled
@@ -178,21 +180,25 @@ npm run slither      # If Slither is installed
 ## CI Strategy
 
 ### PR Workflow
+
 1. **Fast feedback**: Main CI completes in ~3-5 minutes
 2. **No external dependencies**: Works in any environment
 3. **Blocking only on core issues**: Lint, type, unit test, build failures
 
 ### Production Readiness
+
 1. **Optional E2E validation**: Comprehensive testing when needed
 2. **Security scanning**: Slither analysis for contract security
 3. **Artifact collection**: Reports and logs for debugging
 
 ### Merge Requirements
+
 - All mandatory CI jobs must pass
 - E2E jobs are informational only
 - No secrets required for basic development workflow
 
 This design ensures the CI pipeline is:
+
 - **Fast and reliable** for daily development
 - **Comprehensive** when full validation is needed
 - **Accessible** to contributors without special setup requirements

@@ -41,7 +41,9 @@ export class HttpProvider {
       if (error instanceof ProviderError) {
         throw error;
       }
-      throw new ProviderError(`HTTP provider connection failed: ${String(error)}`);
+      throw new ProviderError(
+        `HTTP provider connection failed: ${String(error)}`
+      );
     }
   }
 

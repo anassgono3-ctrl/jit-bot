@@ -34,7 +34,7 @@ export class WsProvider {
       if (!wsUrl) {
         throw new ProviderError('WebSocket URL is required but not provided');
       }
-      
+
       this.provider = new WebSocketProvider(wsUrl, {
         chainId: this.config.chainId,
         name: 'ethereum',
@@ -52,7 +52,9 @@ export class WsProvider {
       logger.info('WebSocket provider started');
     } catch (error) {
       this.provider = null;
-      throw new ProviderError(`WebSocket provider start failed: ${String(error)}`);
+      throw new ProviderError(
+        `WebSocket provider start failed: ${String(error)}`
+      );
     }
   }
 
@@ -72,7 +74,9 @@ export class WsProvider {
       logger.info('WebSocket provider stopped');
     } catch (error) {
       logger.error(`Error stopping WebSocket provider: ${String(error)}`);
-      throw new ProviderError(`WebSocket provider stop failed: ${String(error)}`);
+      throw new ProviderError(
+        `WebSocket provider stop failed: ${String(error)}`
+      );
     }
   }
 

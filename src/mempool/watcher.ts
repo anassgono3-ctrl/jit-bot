@@ -55,14 +55,13 @@ export class MempoolWatcher {
     try {
       // TODO: In future PRs, add transaction decoding and opportunity detection
       logger.debug(`Pending transaction detected: ${txHash}`);
-      
+
       // Placeholder for future implementation:
       // 1. Fetch transaction details
       // 2. Decode transaction data
       // 3. Check if it's a Uniswap V3 swap
       // 4. Analyze for JIT opportunities
       // 5. Emit opportunity events
-      
     } catch (error) {
       logger.error(`Error handling pending transaction: ${String(error)}`);
     }

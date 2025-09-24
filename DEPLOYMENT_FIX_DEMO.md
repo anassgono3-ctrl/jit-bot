@@ -11,8 +11,9 @@ Error: invalid address (argument="address", value="", code=INVALID_ARGUMENT, ver
 ```
 
 This happened because:
+
 1. `process.env.PROFIT_RECIPIENT = ""` (empty string)
-2. `process.env.POSITION_MANAGER = ""` (empty string) 
+2. `process.env.POSITION_MANAGER = ""` (empty string)
 3. The code would check `process.env.PROFIT_RECIPIENT || fallback`, but `""` is truthy in this context
 4. Empty string would be passed to ethers.js, causing the invalid address error
 
@@ -47,13 +48,14 @@ const profitRecipient = process.env.PROFIT_RECIPIENT || deployer.address;
 // If PROFIT_RECIPIENT="", this would pass "" to ethers (ERROR!)
 
 // NEW CODE (fixed):
-const profitRecipient = getAddressEnv("PROFIT_RECIPIENT", deployer.address);
+const profitRecipient = getAddressEnv('PROFIT_RECIPIENT', deployer.address);
 // If PROFIT_RECIPIENT="", this uses deployer.address fallback (SUCCESS!)
 ```
 
 ### Test Results
 
 All 12 test scenarios pass, including:
+
 - Empty string handling (`PROFIT_RECIPIENT=""`)
 - Whitespace handling (`POSITION_MANAGER="   "`)
 - Invalid address detection

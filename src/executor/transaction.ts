@@ -37,7 +37,9 @@ export class TransactionExecutor {
       const balance = await provider.getBalance(this.wallet.address);
       return BigInt(balance.toString());
     } catch (error) {
-      throw new TransactionError(`Failed to get wallet balance: ${String(error)}`);
+      throw new TransactionError(
+        `Failed to get wallet balance: ${String(error)}`
+      );
     }
   }
 
@@ -55,12 +57,16 @@ export class TransactionExecutor {
     // - Nonce management
     // - Transaction monitoring
     // - Error handling and retries
-    
-    logger.info(`Transaction prepared (not sent in foundation): from=${this.wallet.address}, to=${to}, value=${value.toString()}, dataLength=${data.length}`);
+
+    logger.info(
+      `Transaction prepared (not sent in foundation): from=${this.wallet.address}, to=${to}, value=${value.toString()}, dataLength=${data.length}`
+    );
 
     // Return mock transaction hash for foundation
     return {
-      hash: '0x' + Buffer.from(`mock-tx-${Date.now()}`).toString('hex').padEnd(64, '0'),
+      hash:
+        '0x' +
+        Buffer.from(`mock-tx-${Date.now()}`).toString('hex').padEnd(64, '0'),
       success: true,
     };
   }
@@ -68,7 +74,11 @@ export class TransactionExecutor {
   /**
    * Estimate gas for a transaction
    */
-  async estimateGas(to: string, data: string, value: bigint = 0n): Promise<bigint> {
+  async estimateGas(
+    to: string,
+    data: string,
+    value: bigint = 0n
+  ): Promise<bigint> {
     try {
       const provider = this.wallet.provider;
       if (!provider) {

@@ -14,13 +14,14 @@ For MEV sandwich attacks and JIT strategies, the bundle **MUST** follow this exa
 
 ```
 1. JitExecutor.executeFlashloan() - Triggers flashloan and mints JIT position
-2. [VICTIM TRANSACTION] - Raw signed transaction from mempool  
+2. [VICTIM TRANSACTION] - Raw signed transaction from mempool
 3. JitExecutor.burnAndCollect() - Burns position and collects fees/profit
 ```
 
 This ordering ensures:
+
 - JIT liquidity is provided before the victim swap
-- Victim swap executes against our liquidity 
+- Victim swap executes against our liquidity
 - We immediately collect fees and remove liquidity
 - Atomic execution prevents sandwich attacks on our position
 
@@ -53,7 +54,7 @@ The mempool watcher captures raw transaction bytes using multiple strategies:
 // Primary: Local node raw transaction API
 const rawTx = await provider.send('eth_getRawTransactionByHash', [txHash]);
 
-// Fallback: Enhanced provider APIs  
+// Fallback: Enhanced provider APIs
 const rawTx = await enhancedProvider.getRawTransaction(txHash);
 
 // Last resort: Reconstruction (incomplete)
@@ -66,11 +67,11 @@ const rawTx = ethers.utils.serializeTransaction(txObject);
 const bundle = {
   transactions: [signedJitMintTx, signedJitBurnTx], // Our JIT transactions
   victimTransaction: {
-    rawTxHex: "0x02f8b20182...", // Raw signed bytes from mempool
-    hash: "0x1234567890...",     // Transaction hash for verification
-    insertAfterIndex: 0          // Insert after first JIT tx (mint)
+    rawTxHex: '0x02f8b20182...', // Raw signed bytes from mempool
+    hash: '0x1234567890...', // Transaction hash for verification
+    insertAfterIndex: 0, // Insert after first JIT tx (mint)
   },
-  targetBlockNumber: currentBlock + 1
+  targetBlockNumber: currentBlock + 1,
 };
 ```
 
@@ -79,9 +80,9 @@ const bundle = {
 ```typescript
 // Final bundle sent to Flashbots
 const flashbotsBundle = [
-  signedJitMintTx,           // Signed transaction hex
-  bundle.victimTransaction.rawTxHex, // Raw victim transaction  
-  signedJitBurnTx            // Signed transaction hex
+  signedJitMintTx, // Signed transaction hex
+  bundle.victimTransaction.rawTxHex, // Raw victim transaction
+  signedJitBurnTx, // Signed transaction hex
 ];
 ```
 
@@ -92,6 +93,7 @@ const flashbotsBundle = [
 The `validateBundleOrdering()` function enforces these rules:
 
 #### Enhanced Bundles (with victim transaction):
+
 - ✅ **MUST** contain exactly 2 JIT transactions (mint + burn)
 - ✅ **MUST** have `victimTransaction.rawTxHex` or `victimTransaction.rawTx`
 - ✅ **MUST** have `victimTransaction.hash` for verification
@@ -99,6 +101,7 @@ The `validateBundleOrdering()` function enforces these rules:
 - ✅ Total gas usage **MUST** be < 80% of block gas limit
 
 #### Standard Bundles (no victim transaction):
+
 - ✅ **MUST** contain at least 1 transaction
 - ✅ **MUST** have valid transaction structure and signatures
 - ✅ Supports single-transaction bundles for simple JIT operations
@@ -121,7 +124,7 @@ if (!pendingSwap.rawTxHex && REJECT_WITHOUT_RAW_TX) {
   logger.warn({
     msg: 'Rejecting opportunity: no raw transaction bytes',
     txHash: pendingSwap.hash,
-    policy: 'REJECT_WITHOUT_RAW_TX'
+    policy: 'REJECT_WITHOUT_RAW_TX',
   });
   return null;
 }
@@ -138,11 +141,11 @@ If the victim transaction is replaced or canceled:
 
 ```typescript
 // Replacement detection
-if (await provider.getTransaction(victimTxHash) === null) {
+if ((await provider.getTransaction(victimTxHash)) === null) {
   logger.warn({
     msg: 'Victim transaction replaced or canceled',
     originalHash: victimTxHash,
-    action: 'ABORT_BUNDLE'
+    action: 'ABORT_BUNDLE',
   });
   throw new Error('Victim transaction no longer valid');
 }
@@ -186,14 +189,14 @@ if (finalAmount < repayAmount + minProfitThreshold) {
 ### Key Metrics to Track
 
 1. **Raw TX Capture Rate**: % of opportunities with raw transaction bytes
-2. **Bundle Success Rate**: % of submitted bundles that land on-chain  
+2. **Bundle Success Rate**: % of submitted bundles that land on-chain
 3. **Victim TX Replacement Rate**: % of victims replaced before execution
 4. **Profit Realization Rate**: % of expected profit actually captured
 
 ### Alerting Rules
 
 - Alert if raw TX capture rate < 90%
-- Alert if bundle success rate < 50%  
+- Alert if bundle success rate < 50%
 - Alert if victim replacement rate > 10%
 - Alert if no successful bundles for > 30 minutes
 
@@ -205,7 +208,7 @@ if (finalAmount < repayAmount + minProfitThreshold) {
 {
   "transactions": [
     "0x02f87101...", // JIT mint transaction (signed)
-    "0x02f87102...", // JIT burn transaction (signed)  
+    "0x02f87102..." // JIT burn transaction (signed)
   ],
   "victimTransaction": {
     "rawTxHex": "0x02f8b20182059889...", // Victim's raw signed transaction
@@ -229,9 +232,9 @@ if (finalAmount < repayAmount + minProfitThreshold) {
     "effectiveGasPrice": "25000000000",
     "profit": "45000000000000000", // 0.045 ETH
     "transactions": [
-      {"gasUsed": 180000, "success": true},
-      {"gasUsed": 120000, "success": true}, // Victim
-      {"gasUsed": 150000, "success": true}
+      { "gasUsed": 180000, "success": true },
+      { "gasUsed": 120000, "success": true }, // Victim
+      { "gasUsed": 150000, "success": true }
     ]
   },
   "victimIncluded": true,

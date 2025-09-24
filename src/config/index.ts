@@ -38,7 +38,9 @@ export function loadConfig(): BotConfig {
 
   // Validate private key format
   if (!privateKey.startsWith('0x') || privateKey.length !== 66) {
-    throw new Error('PRIVATE_KEY must be a valid 32-byte hex string starting with 0x');
+    throw new Error(
+      'PRIVATE_KEY must be a valid 32-byte hex string starting with 0x'
+    );
   }
 
   // Validate chain ID
@@ -49,7 +51,8 @@ export function loadConfig(): BotConfig {
 
   // Validate log level
   const validLogLevels = ['debug', 'info', 'warn', 'error'] as const;
-  const parsedLogLevel = (logLevel as typeof validLogLevels[number]) || 'info';
+  const parsedLogLevel =
+    (logLevel as (typeof validLogLevels)[number]) || 'info';
   if (!validLogLevels.includes(parsedLogLevel)) {
     throw new Error(`LOG_LEVEL must be one of: ${validLogLevels.join(', ')}`);
   }
