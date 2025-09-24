@@ -1,42 +1,52 @@
-FROM node:18-alpine
+# Multi-stage Dockerfile for JIT Bot Foundation
+# Node 20 with pnpm support
 
-# Install curl for healthcheck
-RUN apk add --no-cache curl
+FROM node:20-alpine AS base
 
-# Create app directory
+# Enable corepack for pnpm
+RUN corepack enable
+RUN corepack prepare pnpm@9.12.0 --activate
+
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
+COPY package.json pnpm-workspace.yaml ./
 
 # Install dependencies
-RUN npm ci --only=production
+FROM base AS deps
+RUN pnpm install --frozen-lockfile
 
-# Copy application code
+# Build stage
+FROM base AS build
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN pnpm run build
 
-# Build the application
-RUN npm run build
+# Production stage
+FROM node:20-alpine AS production
 
-# Create logs directory
-RUN mkdir -p logs
+# Enable corepack for pnpm
+RUN corepack enable
+RUN corepack prepare pnpm@9.12.0 --activate
 
-# Create non-root user
+WORKDIR /app
+
+# Copy package files and install production dependencies only
+COPY package.json pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile --prod
+
+# Copy built application
+COPY --from=build /app/dist ./dist
+
+# Create data directory for state persistence
+RUN mkdir -p /app/data
+
+# Run as non-root user
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S jitbot -u 1001
-
-# Change ownership
 RUN chown -R jitbot:nodejs /app
-
-# Switch to non-root user
 USER jitbot
 
-# Expose port
-EXPOSE 3001
+EXPOSE 3000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3001/health || exit 1
-
-# Start the application
-CMD ["npm", "start"]
+CMD ["node", "dist/src/index.js"]

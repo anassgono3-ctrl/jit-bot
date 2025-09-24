@@ -1,4 +1,231 @@
-# JIT Liquidity Provision Bot for Uniswap V3
+# JIT Bot Foundation
+
+A production-ready foundation for Just-in-Time (JIT) liquidity provision bot targeting Uniswap V3 pools on Ethereum. This foundation provides a clean, modular, and extensible base for future development of advanced MEV strategies.
+
+## 🎯 Features
+
+- **TypeScript Foundation**: Strict TypeScript with ESM modules and modern Node.js support
+- **Provider Management**: Robust HTTP and WebSocket provider wrappers with lifecycle management
+- **Configuration**: Environment-based configuration with validation using dotenv-safe
+- **State Persistence**: Lightweight JSON-based state store (extensible to SQLite/LevelDB)
+- **Structured Logging**: pino-based structured logging with configurable levels
+- **Testing**: Jest with TypeScript ESM support and network-aware test skipping
+- **Docker Support**: Multi-stage Dockerfile with pnpm and Node.js 20
+- **CI/CD**: GitHub Actions workflow for linting, building, testing, and Docker validation
+
+## 📂 Project Structure
+
+```
+/jit-bot
+├─ src/
+│   ├─ config/          # Runtime configuration loader/validator
+│   │   └─ index.ts
+│   ├─ utils/           # Logger, error types, gas utilities
+│   │   ├─ logger.ts
+│   │   ├─ errors.ts
+│   │   ├─ gas.ts
+│   │   └─ index.ts
+│   ├─ types/           # TypeScript interfaces
+│   │   └─ index.ts
+│   ├─ providers/       # HTTP and WebSocket provider wrappers
+│   │   ├─ http.ts
+│   │   ├─ ws.ts
+│   │   └─ index.ts
+│   ├─ db/              # Lightweight persistent state
+│   │   ├─ state.ts
+│   │   └─ index.ts
+│   ├─ mempool/         # Pending transaction watcher (skeleton)
+│   │   ├─ watcher.ts
+│   │   └─ index.ts
+│   ├─ pools/           # Uniswap V3 pool accessor
+│   │   ├─ uniswapV3Pool.ts
+│   │   └─ index.ts
+│   ├─ executor/        # Transaction executor (placeholder)
+│   │   ├─ transaction.ts
+│   │   └─ index.ts
+│   └─ index.ts         # Main entry point
+├─ tests/               # Jest tests
+│   ├─ providers/
+│   └─ pools/
+├─ .env.example         # Environment variable template
+├─ tsconfig.json        # TypeScript configuration (strict, ESM)
+├─ package.json         # Node.js package with pnpm support
+├─ pnpm-workspace.yaml  # pnpm workspace configuration
+├─ Dockerfile           # Multi-stage Docker build
+├─ docker-compose.yml   # Docker Compose with optional nodes
+├─ jest.config.ts       # Jest configuration for TypeScript ESM
+├─ .eslintrc.cjs        # ESLint configuration (strict rules)
+├─ .prettierrc          # Prettier configuration
+└─ .github/workflows/ci.yml  # GitHub Actions CI
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 20+ (recommended)
+- pnpm 9.12.0+ (using corepack)
+
+### Installation
+
+```bash
+# Enable pnpm (Node 20 recommended)
+corepack enable
+corepack prepare pnpm@9.12.0 --activate
+
+# Install dependencies
+pnpm install
+```
+
+### Configuration
+
+1. Copy the environment template:
+```bash
+cp .env.example .env
+```
+
+2. Edit `.env` with your configuration:
+```bash
+# Required
+ETH_RPC_HTTP=https://your-ethereum-rpc-url
+PRIVATE_KEY=0x1111111111111111111111111111111111111111111111111111111111111111
+CHAIN_ID=1
+UNISWAP_V3_POOL_ADDRESS=0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640
+
+# Optional
+ETH_RPC_WS=wss://your-ethereum-websocket-url
+LOG_LEVEL=info
+```
+
+### Development
+
+```bash
+# Lint code
+pnpm run lint
+
+# Fix linting issues
+pnpm run lint:fix
+
+# Type checking
+pnpm run typecheck
+
+# Build
+pnpm run build
+
+# Run tests
+pnpm test
+
+# Run the bot (foundation demo)
+pnpm run dev
+```
+
+## 🐳 Docker
+
+### Build and Run
+
+```bash
+# Build Docker image
+docker build -t jit-bot .
+
+# Run with environment file
+docker run --env-file .env jit-bot
+```
+
+### Docker Compose
+
+```bash
+# Start services (includes Redis for future use)
+docker-compose up -d
+
+# View logs
+docker-compose logs -f jit-bot
+
+# Stop services
+docker-compose down
+```
+
+## 🧪 Testing
+
+Tests are designed to be network-aware and will automatically skip tests that require RPC connections when environment variables are not set.
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests with coverage
+pnpm test -- --coverage
+
+# Run specific test file
+pnpm test -- tests/providers/provider.test.ts
+```
+
+### Test Environment Variables
+
+To enable integration tests that require network access, set these variables:
+
+```bash
+ETH_RPC_HTTP=https://your-rpc-url
+UNISWAP_V3_POOL_ADDRESS=0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640
+```
+
+## 📊 Monitoring
+
+The foundation includes structured logging with pino. Future PRs will add:
+
+- Prometheus metrics exposition
+- Grafana dashboards
+- Health check endpoints
+- Performance monitoring
+
+## 🛠️ Development Workflow
+
+1. **Linting**: Code must pass ESLint with strict rules (no implicit any, etc.)
+2. **Type Safety**: TypeScript strict mode with comprehensive type checking
+3. **Testing**: Jest tests with network-aware skipping
+4. **Building**: Clean TypeScript compilation to dist/
+5. **Docker**: Multi-stage builds for production deployment
+
+## 🔧 Environment Variables
+
+| Variable | Required | Description | Default |
+|----------|----------|-------------|---------|
+| `ETH_RPC_HTTP` | Yes | HTTP RPC endpoint | - |
+| `ETH_RPC_WS` | No | WebSocket RPC endpoint | - |
+| `PRIVATE_KEY` | Yes | Private key (64 hex chars) | - |
+| `CHAIN_ID` | Yes | Ethereum chain ID | - |
+| `UNISWAP_V3_POOL_ADDRESS` | Yes | Target pool address | - |
+| `LOG_LEVEL` | No | Logging level | `info` |
+
+## 🚀 What's Next (Future PRs)
+
+This foundation provides the base for implementing:
+
+- **Advanced Mempool Decoding**: Transaction parsing and opportunity detection
+- **Dynamic JIT Liquidity**: Range selection, sizing, capital allocation
+- **Execution Engine**: Flashloan support, risk controls, slippage checks
+- **Private Submission**: Flashbots and other builder integrations
+- **Persistent Storage**: SQLite or LevelDB for production state management
+- **Metrics & Monitoring**: Prometheus metrics and Grafana dashboards
+- **Enhanced CI**: Multi-environment testing and deployment pipelines
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes following the coding standards
+4. Run tests and ensure they pass: `pnpm test`
+5. Run linting: `pnpm run lint`
+6. Commit your changes: `git commit -m 'Add amazing feature'`
+7. Push to the branch: `git push origin feature/amazing-feature`
+8. Open a Pull Request
+
+## ⚠️ Disclaimer
+
+This software is for educational and research purposes. Use at your own risk. The authors are not responsible for any financial losses incurred through the use of this software.
 
 A production-ready Just-In-Time (JIT) liquidity provision bot that automatically detects large pending swaps and provides concentrated liquidity to capture fees. Supports simulation, fork-based preflight validation, and live mainnet execution with Flashbots integration.
 

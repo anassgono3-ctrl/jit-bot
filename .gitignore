@@ -1,20 +1,37 @@
+# Dependencies
 node_modules/
+.pnpm-store/
+
+# Build outputs
 dist/
-cache/
-artifacts/
-typechain-types/
 coverage/
+
+# Environment files
 .env
-.DS_Store
+.env.local
+.env.*.local
+
+# Logs
 *.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Runtime data
+data/
+*.pid
+*.seed
+*.pid.lock
+
+# IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# Reports directory (keep structure but ignore generated reports)
-reports/*.json
-reports/*.csv
-reports/*.md
-!reports/.gitkeep
-!reports/fixture-*.json
-!reports/sample-pending-candidate.json
-!reports/sample-mempool-swap.json
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+.tmp/
+tmp/

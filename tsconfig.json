@@ -1,48 +1,34 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "lib": ["ES2020"],
-    "module": "commonjs",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "declaration": true,
     "outDir": "./dist",
+    "rootDir": "./",
     "strict": true,
+    "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "baseUrl": "./",
-    "paths": {
-      "@/*": ["src/*"],
-      "@contracts/*": ["typechain-types/*"]
-    },
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "exactOptionalPropertyTypes": false,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true
   },
   "include": [
-    "./src/**/*",
-    "./test/**/*",
-    "./tests/**/*"
+    "src/**/*",
+    "tests/**/*"
   ],
   "exclude": [
-    "node_modules", 
-    "dist", 
-    "cache", 
-    "artifacts", 
-    "typechain-types", 
-    "test/old",
-    "test/old/integration.test.ts",
-    "test/old/SimpleJitExecutor.test.ts"
-  ],
-  "ts-node": {
-    "esm": false,
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  }
+    "node_modules",
+    "dist",
+    "/tmp"
+  ]
 }
